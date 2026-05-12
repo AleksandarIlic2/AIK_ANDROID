@@ -9600,7 +9600,35 @@ public class Steps {
 
         Assert.assertTrue(5 == count);
 
+    }
 
+    @And("Enter text {string} into field by id {string} and index {string}")
+    public void enterTextIntoFieldByIdAndIndex(String text, String id, String index) {
 
+        int number = Integer.parseInt(index);
+        By elWait = d.createElementById(id);
+        WaitHelpers.waitForElement(elWait);
+        List<MobileElement> mobileElementList = d.createElementsById(id);
+        mobileElementList.get(number - 1).sendKeys(text);
+        //hp.ClickOnElement(mobileElementList.get(number - 1));
+
+    }
+
+    @And("Enter text from excel {string} columnName {string} in element id {string} and index {string}")
+    public void enterTextFromExcelColumnNameInElementIdAndIndex(String rowIndex, String columnName, String id, String index) {
+        int number = Integer.parseInt(index);
+        By elWait = d.createElementById(id);
+        WaitHelpers.waitForElement(elWait);
+        List<MobileElement> mobileElementList = d.createElementsById(id);
+        String racunZaUplatu = DataManager.getDataFromHashDatamap(rowIndex, columnName);
+        mobileElementList.get(number - 1).sendKeys(racunZaUplatu);
+    }
+
+    @And("Assert element by text {string} has following sibling with text from excel {string} columnName {string}")
+    public void assertElementByTextHasFollowingSiblingWithTextFromExcelColumnName(String text, String rowindex, String columnName) {
+        String xPath = "(//*[@text='" + text + "']//following-sibling::*)[1]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        String expected = DataManager.getDataFromHashDatamap(rowindex, columnName);
+        Assert.assertTrue(element.getText().contains(expected));
     }
 }

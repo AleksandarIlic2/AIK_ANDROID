@@ -1,7 +1,7 @@
 Feature: Product_Summary
 
-  @Account_Overview_[MOB_ANDROID]
-  Scenario Outline: Account_Overview_[MOB_ANDROID]
+  @HomePage_[MOB_ANDROID]
+  Scenario Outline: HomePage_[MOB_ANDROID]
 
     Given Open Application
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
@@ -48,25 +48,62 @@ Feature: Product_Summary
     #And Enter text from excel "1" columnName "test123" in element id "test123"
 
 
-
-
     Examples:
       | rowindex |
       |        1 |
 
 
-  @HomePage_[MOB_ANDROID]
-  Scenario Outline: HomePage_[MOB_ANDROID]
+  @Placanje_RSD_Nedovoljno_Sredstava[MOB_ANDROID]
+  Scenario Outline: Placanje_RSD_Nedovoljno_Sredstava[MOB_ANDROID]
 
     Given Open Application
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
     And Enter PIN
     And Wait for login page to load
     And Assert text from excel "1" columnName "currentDomesticAccountBBAN" in element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_number"
-    And Assert element by text "asdadasd"
-    And Scroll down until element with text "Vidi ceo promet" is in view
+    And Choose option "Plaćanja" from bottom menu
+    And Click on element by text "Plaćanje RSD"
+    And Enter text "1000" into field by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text" and index "1"
+    And Enter text from excel "1" columnName "racunZaUplatu" in element id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text" and index "2"
+    And Enter text "randomImePrimalac" into field by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text" and index "3"
+    And Enter text "randomAdresaPrimaoca" into field by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text" and index "4"
+    And Scroll down until element with text "Mesto primaoca" is in view
+    And Enter text "randomMestoPrimaoca" into field by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text" and index "5"
+    And Scroll down until element with text "Plati" is in view
+    And Click on element by text "Plati"
+    And Scroll down until element with text "Potvrdi" is in view
+    And Click on element by text "Potvrdi"
+    And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
+    And Enter PIN
+    And Assert element by text "Greška"
+    And Assert element by text "Nalog PP nije uspešno kreiran."
+    #And Click on "2" element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/check_box"
+    Examples:
+      | rowindex |
+      |        1 |
 
 
+
+  @Licni_Podaci[MOB_ANDROID]
+  Scenario Outline: Licni_Podaci[MOB_ANDROID]
+
+    Given Open Application
+    And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
+    And Enter PIN
+    And Wait for login page to load
+    And Choose option "Meni" from bottom menu
+    And Click on element by text "Podešavanja"
+    And Click on element by text "Lični podaci"
+    And Assert element by text "LJILJANA KOVAČ"
+    And Wait for element by text "Tip identifikacionog dokumenta"
+    And Assert element by text "Tip identifikacionog dokumenta" has first following sibling contains text "Lična karta"
+    And Assert element by text "Broj identifikacionog dokumenta" has following sibling with text from excel "1" columnName "Broj_identifikacionog_dokumenta"
+    And Assert element by text "Datum važenja identifikacionog dokumenta" has following sibling with text from excel "1" columnName "Datum_važenja_identifikacionog_dokumenta"
+    And Assert element by text "Adresa iz identifikacionog dokumenta" has following sibling with text from excel "1" columnName "Adresa_iz_identifikacionog_dokumenta"
+    And Assert element by text "Kućni telefon" has following sibling with text from excel "1" columnName "Kucni_telefon"
+    And Scroll down until element with text "Podaci nisu ispravni?" is in view
+    And Assert element by text "Mobilni telefon" has following sibling with text from excel "1" columnName "Mobilni_telefon"
+    And Assert element by text "E-mail adresa" has following sibling with text from excel "1" columnName "E-mail_adresa"
 
 
     Examples:
