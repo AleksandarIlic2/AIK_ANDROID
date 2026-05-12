@@ -9585,4 +9585,22 @@ public class Steps {
         hp.ClickOnElement(element);
     }
 
+    @And("Check number of transactions shown")
+    public void checkNumberOfTransactionsShown() throws Exception {
+        int count = driver.findElements(
+                By.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id='eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_turnover']/*")
+        ).size();
+
+        Assert.assertTrue(3 == count);
+        By element = d.createElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/rb_5");
+        hp.clickElement(element);
+        count = driver.findElements(
+                By.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id='eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_turnover']/*")
+        ).size();
+
+        Assert.assertTrue(5 == count);
+
+
+
+    }
 }
