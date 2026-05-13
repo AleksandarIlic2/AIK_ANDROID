@@ -9586,4 +9586,50 @@ public class Steps {
         hp.ClickOnElement(element);
     }
 
+    @And("Check number of transactions shown")
+    public void checkNumberOfTransactionsShown() throws Exception {
+        int count = driver.findElements(
+                By.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id='eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_turnover']/*")
+        ).size();
+
+        Assert.assertTrue(3 == count);
+        By element = d.createElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/rb_5");
+        hp.clickElement(element);
+        count = driver.findElements(
+                By.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id='eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_turnover']/*")
+        ).size();
+
+        Assert.assertTrue(5 == count);
+
+    }
+
+    @And("Enter text {string} into field by id {string} and index {string}")
+    public void enterTextIntoFieldByIdAndIndex(String text, String id, String index) {
+
+        int number = Integer.parseInt(index);
+        By elWait = d.createElementById(id);
+        WaitHelpers.waitForElement(elWait);
+        List<MobileElement> mobileElementList = d.createElementsById(id);
+        mobileElementList.get(number - 1).sendKeys(text);
+        //hp.ClickOnElement(mobileElementList.get(number - 1));
+
+    }
+
+    @And("Enter text from excel {string} columnName {string} in element id {string} and index {string}")
+    public void enterTextFromExcelColumnNameInElementIdAndIndex(String rowIndex, String columnName, String id, String index) {
+        int number = Integer.parseInt(index);
+        By elWait = d.createElementById(id);
+        WaitHelpers.waitForElement(elWait);
+        List<MobileElement> mobileElementList = d.createElementsById(id);
+        String racunZaUplatu = DataManager.getDataFromHashDatamap(rowIndex, columnName);
+        mobileElementList.get(number - 1).sendKeys(racunZaUplatu);
+    }
+
+    @And("Assert element by text {string} has following sibling with text from excel {string} columnName {string}")
+    public void assertElementByTextHasFollowingSiblingWithTextFromExcelColumnName(String text, String rowindex, String columnName) {
+        String xPath = "(//*[@text='" + text + "']//following-sibling::*)[1]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        String expected = DataManager.getDataFromHashDatamap(rowindex, columnName);
+        Assert.assertTrue(element.getText().contains(expected));
+    }
 }
