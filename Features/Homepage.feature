@@ -17,3 +17,16 @@ Feature: Product_Summary
     Examples:
       | rowindex |
       |        1 |
+
+  @Login
+  Scenario Outline: Login
+
+    Given Open Application
+    And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
+    And Enter PIN
+    And Wait for login page to load
+    And Choose option "Kartice" from bottom menu
+
+    Examples:
+      | rowindex |
+      |        1 |

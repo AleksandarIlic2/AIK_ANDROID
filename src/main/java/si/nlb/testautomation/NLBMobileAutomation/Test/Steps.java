@@ -1045,7 +1045,8 @@ public class Steps {
 
     @And("Enter PIN")
     public void enterPIN() {
-        driver.getKeyboard().pressKey("2804");
+        //driver.getKeyboard().pressKey("2804"); //ljiljanakovac
+        driver.getKeyboard().pressKey("9128"); //snezana.nikolic
 
     }
 
