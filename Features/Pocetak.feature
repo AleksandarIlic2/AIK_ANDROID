@@ -16,7 +16,9 @@ Feature: Pocetak
     And Check if card is opened correctly for user "<rowindex>"
     And Click on more options for the card
     And Click on card details
-    #And Check if card details are correctly displayed for user <"rowindex">
+    And Page title is "Detalji kartice"
+    #TODO predji na listu labela?
+    And Check if card details are correctly displayed for user <"rowindex">
 
     Examples:
       | rowindex |
@@ -27,7 +29,7 @@ Feature: Pocetak
 
     Given Open Application
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-    And Enter PIN
+    And Enter PIN for user "1"
     And Wait for login page to load
     And Choose option "Ponude" from bottom menu
     And Bank logo still displayed
