@@ -147,4 +147,16 @@ public class SelectById {
         }
         return element;
     }
+
+    public MobileElement createMobileElementById(String id) {
+        MobileElement element = null;
+        String xPath = "//*[@resource-id=\"" + id + "\")]";
+        if (Base.testPlatform.equals("iOS")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        if (Base.testPlatform.equals("Android")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        return element;
+    }
 }

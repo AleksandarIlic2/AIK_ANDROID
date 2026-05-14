@@ -1,23 +1,14 @@
 package si.nlb.testautomation.NLBMobileAutomation.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.nativekey.AndroidKey;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.messages.Messages;
 import javafx.util.Pair;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
-import io.appium.java_client.android.nativekey.KeyEvent;
-import net.sf.cglib.core.Local;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.xmlbeans.impl.tool.StreamInstanceValidator;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.security.core.parameters.P;
 import si.nlb.testautomation.NLBMobileAutomation.Action.HTTPAction;
 import si.nlb.testautomation.NLBMobileAutomation.Action.PSD2Api;
 import si.nlb.testautomation.NLBMobileAutomation.Action.RoutineHelper;
@@ -52,9 +43,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.openqa.selenium.interactions.Actions;
 
 
 import static org.junit.Assert.assertEquals;
@@ -712,6 +700,7 @@ public class Steps {
         String actualDate = element.getAttribute("text").replaceAll("\u00A0", "");
         Assert.assertEquals(currentDate, actualDate);
     }
+
     @And("Assert element {string} by id has current date in format {string} uppercase")
     public void assertElementByIdHasCurrentDateInFormatUpperCase(String id, String dateFormat) {
         MobileElement element = d.createMobileElementByResourceId(id);
@@ -1045,8 +1034,8 @@ public class Steps {
 
     @And("Enter PIN for user {string}")
     public void enterPINforUser(String rowindex) {
-        String pin = DataManager.getDataFromHashDatamap(rowindex,"password");
-        driver.getKeyboard().pressKey(pin);     
+        String pin = DataManager.getDataFromHashDatamap(rowindex, "password");
+        rh.sendKeys(pin);
 
 
     }
@@ -3914,7 +3903,7 @@ public class Steps {
         By elForLoad3 = x.createByXpath(xPathForLoad);
         WaitHelpers.waitForElement(elForLoad3);
 
-       // MobileElement elementForCurrentBalance = x.createMobileElementByXpath(xPathForCurrentBalance);
+        // MobileElement elementForCurrentBalance = x.createMobileElementByXpath(xPathForCurrentBalance);
         //hp.ClickOnElement(elementForCurrentBalance);
  /*   By elWait5 = x.createByXpath(xPathForAssert);
     WaitHelpers.waitForElement(elWait5);
@@ -4662,7 +4651,7 @@ public class Steps {
         MobileElement element = d.createMobileElementByResourceId("nlb-input-date-to");
         String actual = element.getAttribute("text");
         expected = expected.replaceAll("[\\s\\u00A0]", "");
-        actual   = actual.replaceAll("[\\s\\u00A0]", "");
+        actual = actual.replaceAll("[\\s\\u00A0]", "");
         Assert.assertEquals(expected, actual);
     }
 
@@ -8335,7 +8324,7 @@ public class Steps {
         WaitHelpers.waitForSeconds(12);
         for (int i = 1; i <= maxScrolls; i++) {
             try {
-                MobileElement element =  x.createMobileElementByXpath(xPath);
+                MobileElement element = x.createMobileElementByXpath(xPath);
                 if (element.isDisplayed()) {
                     found = true;
                     break;
@@ -9440,7 +9429,7 @@ public class Steps {
         //    throw new AssertionError("No transactions found after filter!");
         //}
 
-        for(int i=0;i<5;i++) {
+        for (int i = 0; i < 5; i++) {
             for (MobileElement transaction : transactions) {
 
                 String type = transaction.findElement(
@@ -9494,6 +9483,7 @@ public class Steps {
 
 
     }
+
     private double parseAmount(String rawAmount) {
 
         rawAmount = rawAmount.replace(" ", "");
@@ -9508,31 +9498,30 @@ public class Steps {
     @And("Enter amount from {string} to {string}")
     public void enterAmountFromTo(String fromValue, String toValue) {
 
-            //WaitHelpers.waitForSeconds(5);
-            List<MobileElement> amountFields = driver.findElements(
-                    By.id("nlb-amount-with-currency-field")
-            );
+        //WaitHelpers.waitForSeconds(5);
+        List<MobileElement> amountFields = driver.findElements(
+                By.id("nlb-amount-with-currency-field")
+        );
 
-            String amountFromXPath = "(//android.widget.EditText[@resource-id=\"nlb-amount-with-currency-field\"])[1]";
-            MobileElement fromField = x.createMobileElementByXpath(amountFromXPath);
+        String amountFromXPath = "(//android.widget.EditText[@resource-id=\"nlb-amount-with-currency-field\"])[1]";
+        MobileElement fromField = x.createMobileElementByXpath(amountFromXPath);
 
-            fromField.click();
-            fromField.clear();
-            fromField.sendKeys(fromValue);
+        fromField.click();
+        fromField.clear();
+        fromField.sendKeys(fromValue);
 
-            String amountToXPath = "(//android.widget.EditText[@resource-id=\"nlb-amount-with-currency-field\"])[2]";
-            MobileElement toField = x.createMobileElementByXpath(amountToXPath);
-            toField.click();
-            toField.clear();
-            toField.sendKeys(toValue);
-
+        String amountToXPath = "(//android.widget.EditText[@resource-id=\"nlb-amount-with-currency-field\"])[2]";
+        MobileElement toField = x.createMobileElementByXpath(amountToXPath);
+        toField.click();
+        toField.clear();
+        toField.sendKeys(toValue);
 
 
     }
 
     @When("Click on element in bottom menu by text {string}")
     public void clickOnElementInBottomMenuByText(String text) throws Throwable {
-        String xPath ="//*[@resource-id=\"nlb-bottom-nav-button\"]//*[@text=\"" + text + "\"]";
+        String xPath = "//*[@resource-id=\"nlb-bottom-nav-button\"]//*[@text=\"" + text + "\"]";
         hp.ClickOnElement(x.createMobileElementByXpath(xPath));
 
     }
@@ -9544,7 +9533,7 @@ public class Steps {
         String promptXpath = "//android.widget.TextView[@text='" + promptName + "']/ancestor::android.view.View[1]";
 
         MobileElement promptElement = (MobileElement) driver.findElement(By.xpath(promptXpath));
-      //  MobileElement container = (MobileElement) promptElement.findElement(By.xpath("ancestor::android.view.View[1]"));
+        //  MobileElement container = (MobileElement) promptElement.findElement(By.xpath("ancestor::android.view.View[1]"));
 
         for (String option : expectedOptions) {
             String optionXpath = ".//android.widget.TextView[@text=\"" + option + "\"]";
@@ -9554,8 +9543,8 @@ public class Steps {
             MobileElement buttonFound = promptElement.findElement(By.xpath(buttonXpath));
 
 
-            Assert.assertTrue("Option '" + option + "' is NOT displayed under prompt '" + promptName + "'",optionFound.isDisplayed());
-            Assert.assertTrue("Option '" + option + "' is NOT a button",buttonFound.isDisplayed());
+            Assert.assertTrue("Option '" + option + "' is NOT displayed under prompt '" + promptName + "'", optionFound.isDisplayed());
+            Assert.assertTrue("Option '" + option + "' is NOT a button", buttonFound.isDisplayed());
 
         }
     }
@@ -9647,13 +9636,14 @@ public class Steps {
 //android.widget.TextView[contains(@resource-id, 'title') and not(contains(@resource-id, 'title_'))]
         String xPath = "//android.widget.TextView[contains(@resource-id, 'title') and not(contains(@resource-id, 'title_'))]";
         MobileElement element = x.createMobileElementByXpath(xPath);
-            assertEquals(title, element.getText().trim());
+        assertEquals(title, element.getText().trim());
     }
 
     @And("Check if card is correctly displayed for user {string}")
     public void checkIfCardIsCorrectlyDisplayedForUser(String rowindex) {
+        WaitHelpers.waitForSeconds(5);
         //card name and number
-        String cardName = DataManager.getDataFromHashDatamap(rowindex,"cardName");
+        String cardName = DataManager.getDataFromHashDatamap(rowindex, "cardName");
         String cardNumber = DataManager.getDataFromHashDatamap(rowindex, "cardNumber");
 
         MobileElement cardNameElement = d.createMobileElementByContainsId("cards_list_item_name");
@@ -9666,7 +9656,7 @@ public class Steps {
         assertEquals(cardNumber, cardNumberDisplayed);
 
         //card icon
-        By cardIconElement = d.createByTagAndContainsResourceId("android.widget.ImageView","cards_list_item_icon");
+        By cardIconElement = d.createByTagAndContainsResourceId("android.widget.ImageView", "cards_list_item_icon");
 
         //available balance
         MobileElement availableBalanceLabel = d.createMobileElementByContainsId("cards_list_item_available_balance_label");
@@ -9694,7 +9684,7 @@ public class Steps {
     @And("Check if card is opened correctly for user {string}")
     public void checkIfCardIsOpenedCorrectlyForUser(String rowindex) throws Throwable {
 
-        String cardName = DataManager.getDataFromHashDatamap(rowindex,"cardName");
+        String cardName = DataManager.getDataFromHashDatamap(rowindex, "cardName");
         String cardNumber = DataManager.getDataFromHashDatamap(rowindex, "cardNumber");
         MobileElement cardNameDisplayed = d.createMobileElementByContainsId("cards_history_title");
         MobileElement cardNumberDisplayed = d.createMobileElementByContainsId("cards_history_subtitle");
@@ -9717,9 +9707,6 @@ public class Steps {
         hp.assertElementDisplayed(card_image);
 
 
-
-
-
     }
 
     @And("Click on more options for the card")
@@ -9730,22 +9717,22 @@ public class Steps {
     }
 
     @And("Click on card details")
-    public void clickOnCardDetails() throws Throwable{
+    public void clickOnCardDetails() throws Throwable {
         MobileElement cardDetails = tx.createMobileElementByTextContains("Detalji kartice");
         hp.ClickOnElement(cardDetails);
     }
 
     @And("Check if card details are correctly displayed for user <{string}>")
     public void checkIfCardDetailsAreCorrectlyDisplayedForUser(String rowindex) {
-        String cardName = DataManager.getDataFromHashDatamap(rowindex,"cardName");
+        String cardName = DataManager.getDataFromHashDatamap(rowindex, "cardName");
         String cardNumber = DataManager.getDataFromHashDatamap(rowindex, "cardNumber");
-        assertThatTextHasFirstFollowingSiblingWithText("Naziv kartice",cardName);
-        assertThatTextHasFirstFollowingSiblingWithText("Broj kartice",cardNumber);
+        assertThatTextHasFirstFollowingSiblingWithText("Naziv kartice", cardName);
+        assertThatTextHasFirstFollowingSiblingWithText("Broj kartice", cardNumber);
         //TODO sacuvati ranije tip kartice?
-        assertThatTextHasFirstFollowingSiblingWithText("Tip kartice","DEBIT");
+        assertThatTextHasFirstFollowingSiblingWithText("Tip kartice", "DEBIT");
 
         String availableBalance = (String) DataManager.userObject.get("cardAvailableBalanceINT") + DataManager.userObject.get("cardAvailableBalanceDEC");
-        assertThatTextHasFirstFollowingSiblingWithText("Raspolozivo stanje",availableBalance + " RSD");
+        assertThatTextHasFirstFollowingSiblingWithText("Raspolozivo stanje", availableBalance + " RSD");
     }
 
     @And("Click on element by id {string} on {string} children")
@@ -9756,5 +9743,151 @@ public class Steps {
         List<WebElement> childElements =
                 parent.findElements(By.xpath("./*"));
         childElements.get(number).click();
+    }
+
+    @And("Validate tabs in offers")
+    public void validateTabsInOffers() {
+
+        List<String> expectedTabs = Arrays.asList(
+                "Proizvodi",
+                "Pregled zahteva",
+                "Pregled ref.\nkamatnih stopa"
+        );
+
+        WebElement tabLayout = driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/tab_layout");
+
+        List<WebElement> actualTabs = tabLayout.findElements(By.className("android.widget.TextView"));
+        assertEquals("Broj tabova nije odgovarajući", expectedTabs.size(), actualTabs.size());
+
+        for (int i = 0; i < expectedTabs.size(); i++) {
+
+            String expected = expectedTabs.get(i).replaceAll("\\s+", " ").trim();
+
+            String actual = actualTabs.get(i).getText().replaceAll("\\s+", " ").trim();
+
+            System.out.println("Expected: " + expected);
+            System.out.println("Actual: " + actual);
+
+            assertEquals("Tekst nije dobar za tab na poziciji: " + i, expected, actual);
+        }
+    }
+
+    @And("Wait for offers to load")
+    public void waitForOffersToLoad() {
+        By el = d.createByContainsResourceId("card_view");
+        WaitHelpers.waitForElement(el);
+    }
+
+    @And("Validate offers")
+     public void validateOffers(){
+
+        List<String> expectedCards = Arrays.asList(
+                "Kreditna kartica",
+                "Krediti",
+                "Štednja",
+                "Dozvoljeno prekoračenje"
+
+        );
+
+        WebElement recyclerView = driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/recycler_view");
+        List<WebElement> cards = recyclerView.findElements(By.xpath(".//*[contains(@resource-id,'card_view')]"));
+
+        assertEquals("Broj card view elemenata nije dobar",expectedCards.size(),cards.size());
+
+        List<WebElement> cardTitles = recyclerView.findElements(By.className("android.widget.TextView"));
+
+        List<String> actualTitles = new ArrayList<>();
+
+        for (WebElement title : cardTitles) {
+
+            String text = title.getText().trim();
+
+            if (!text.isEmpty()) {
+                actualTitles.add(text.replaceAll("\\s+", " ").trim());
+            }
+        }
+
+        for (int i = 0; i < expectedCards.size(); i++) {
+
+            String expected = expectedCards.get(i).replaceAll("\\s+", " ").trim();
+
+            String actual = actualTitles.get(i);
+
+            System.out.println("Expected: " + expected);
+            System.out.println("Actual: " + actual);
+
+            assertEquals("Tekst nije dobar za card na poziciji: " + i, expected, actual);
+        }
+
+    }
+    @And("Click on offer {string}")
+    public void clickOnOffer(String offerName) {
+        String xpath = String.format("//android.view.ViewGroup[.//android.widget.TextView[@text='%s']]//*[contains(@resource-id,'card_view')]", offerName);
+        WebElement card = driver.findElement(By.xpath(xpath));
+        card.click();
+    }
+
+    @And("Validate payment page options")
+    public void validatePaymentPageOptions() {
+
+        List<String> expectedOptions = Arrays.asList(
+                "Plaćanje RSD",
+                "Interni prenos",
+                "Prenesi",
+                "IPS plaćanje",
+                "Pregled plaćanja",
+                "Šabloni"
+        );
+
+        WebElement recyclerView = driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/recyclerView");
+        List<WebElement> menuItems = recyclerView.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/layout"));
+        assertEquals("Broj opcija nije odgovarajući", expectedOptions.size(), menuItems.size());
+
+        for (int i = 0; i < menuItems.size(); i++) {
+
+            WebElement title = menuItems.get(i).findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/text"));
+            String actualText = title.getText().replaceAll("\\s+", " ").trim();
+
+            String expectedText = expectedOptions.get(i).replaceAll("\\s+", " ").trim();
+
+            System.out.println("Expected: " + expectedText);
+            System.out.println("Actual: " + actualText);
+
+            assertEquals("Pogrešan tekst za opciju na poziciji: " + i, expectedText, actualText);
+        }
+    }
+
+    @And("Click on option {string}")
+    public void clickOnOption(String optionText) {
+
+        String xpath = String.format("//androidx.recyclerview.widget.RecyclerView" + "//android.view.ViewGroup[.//android.widget.TextView[@text='%s']]", optionText);
+        WebElement option = driver.findElement(By.xpath(xpath));
+        option.click();
+    }
+
+    @And("Validate internal transfer page")
+    public void validateInternalTransferPage() {
+
+        MobileElement fromAcc = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_from_account_text");
+        assertEquals("Sa računa:",fromAcc.getText().trim());
+
+        checkIfElementByResourceIdIsFollowedByElementWithResourceId("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_from_account_text","eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_debit_accounts_rv");
+
+        MobileElement toAcc = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_to_account_text");
+        assertEquals("Na račun:",toAcc.getText().trim());
+
+        checkIfElementByResourceIdIsFollowedByElementWithResourceId("landing_to_account_text","eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_credit_accounts_rv");
+
+        
+
+
+    }
+
+    private void checkIfElementByResourceIdIsFollowedByElementWithResourceId(String resourceId1, String resourceId2) {
+
+        String xPath = "//*[@resource-id='" + resourceId1 + "']/following-sibling::*[1]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        Assert.assertEquals(resourceId2, element.getId());
+
     }
 }
