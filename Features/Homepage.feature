@@ -5,7 +5,7 @@ Feature: Product_Summary
 
     Given Open Application
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-    And Enter PIN
+    And Enter PIN for user "<rowindex>"
     And Wait for login page to load
     And Assert text from excel "1" columnName "currentDomesticAccountBBAN" in element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_number"
     And Scroll down until element with text "Vidi ceo promet" is in view
@@ -57,7 +57,7 @@ Feature: Product_Summary
 
     Given Open Application
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-    And Enter PIN
+    And Enter PIN for user "<rowindex>"
     And Wait for login page to load
     And Assert text from excel "1" columnName "currentDomesticAccountBBAN" in element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_number"
     And Choose option "Plaćanja" from bottom menu
@@ -73,7 +73,7 @@ Feature: Product_Summary
     And Scroll down until element with text "Potvrdi" is in view
     And Click on element by text "Potvrdi"
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-    And Enter PIN
+    And Enter PIN for user "<rowindex>"
     And Assert element by text "Greška"
     And Assert element by text "Nalog PP nije uspešno kreiran."
     #And Click on "2" element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/check_box"
@@ -94,7 +94,7 @@ Scenario Outline: Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
   And Click on element by desc "Photo taken on May 14, 2026 8:51 AM"
   And Click on element by text "Potvrdi"
   And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-  And Enter PIN
+  And Enter PIN for user "<rowindex>"
 
 
 
@@ -109,7 +109,7 @@ Scenario Outline: Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
 
     Given Open Application
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-    And Enter PIN
+    And Enter PIN for user "<rowindex>"
     And Wait for login page to load
     And Choose option "Meni" from bottom menu
     And Click on element by text "Podešavanja"
