@@ -86,15 +86,65 @@ public class SelectById {
     }
 
 
+    public MobileElement createMobileElementByContainsId(String value) {
+        MobileElement element = null;
+        String xPath = "//*[contains(@resource-id,\"" + value + "\")]";
+        if (Base.testPlatform.equals("iOS")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        if (Base.testPlatform.equals("Android")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        return element;
+
+    }
     public By createElementByResourceId(String id) {
         By element = null;
         String xPath = "//*[@resource-id='" + id + "']";
         element = MobileBy.xpath(xPath);
         return element;
     }
+    public By createByContainsResourceId(String value) {
+        By element = null;
+        String xPath = "//*[contains(@resource-id,\"" + value + "\")]";
+
+        if (Base.testPlatform.equals("iOS")) {
+            element = MobileBy.xpath(xPath);
+        }
+        if (Base.testPlatform.equals("Android")) {
+            element = MobileBy.xpath(xPath);
+        }
+        return element;
+    }
+    public By createByTagAndContainsResourceId(String tag, String value) {
+        By element = null;
+        String xPath = "//" + tag + "[contains(@resource-id,\"" + value + "\")]";
+
+        if (Base.testPlatform.equals("iOS")) {
+            element = MobileBy.xpath(xPath);
+        }
+        if (Base.testPlatform.equals("Android")) {
+            element = MobileBy.xpath(xPath);
+        }
+        return element;
+    }
+
 
     public List<MobileElement> createMobileElementsByResourceId(String id) {
         String xPath = "//*[@resource-id='" + id + "']";
         return (List<MobileElement>) Base.driver.findElementsByXPath(xPath);
+    }
+
+    public MobileElement createMobileElementByTagAndContainsResourceId(String tag, String idp_part) {
+
+        MobileElement element = null;
+        String xPath = "//" + tag + "[contains(@resource-id,\"" + idp_part + "\")]";
+        if (Base.testPlatform.equals("iOS")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        if (Base.testPlatform.equals("Android")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        return element;
     }
 }

@@ -1045,7 +1045,7 @@ public class Steps {
 
     @And("Enter PIN")
     public void enterPIN() {
-        //driver.getKeyboard().pressKey("2804"); //ljiljanakovac
+        //driver.getKeyboard().pressKey("2804"); //ljiljanakovac  Acin user
         driver.getKeyboard().pressKey("9128"); //snezana.nikolic
 
     }
@@ -9631,5 +9631,106 @@ public class Steps {
         MobileElement element = x.createMobileElementByXpath(xPath);
         String expected = DataManager.getDataFromHashDatamap(rowindex, columnName);
         Assert.assertTrue(element.getText().contains(expected));
+    }
+
+    @And("Bank logo still displayed")
+    public void bankLogoStillDisplayed() throws Throwable {
+        //android.widget.ImageView[@resource-id="eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/dashboard_logo"]
+        By element = d.createByTagAndContainsResourceId("android.widget.ImageView", "logo");
+        hp.assertElementDisplayed(element);
+
+    }
+
+    @And("Page title is {string}")
+    public void pageTitleIs(String title) {
+//android.widget.TextView[contains(@resource-id, 'title') and not(contains(@resource-id, 'title_'))]
+        String xPath = "//android.widget.TextView[contains(@resource-id, 'title') and not(contains(@resource-id, 'title_'))]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+            assertEquals(title, element.getText().trim());
+    }
+
+    @And("Check if card is correctly displayed for user {string}")
+    public void checkIfCardIsCorrectlyDisplayedForUser(String rowindex) {
+        //card name and number
+        String cardName = DataManager.getDataFromHashDatamap(rowindex,"cardName");
+        String cardNumber = DataManager.getDataFromHashDatamap(rowindex, "cardNumber");
+
+        MobileElement cardNameElement = d.createMobileElementByContainsId("cards_list_item_name");
+        MobileElement cardNumberElement = d.createMobileElementByContainsId("cards_list_item_account_number");
+
+        String cardNameDisplayed = cardNameElement.getText();
+        String cardNumberDisplayed = cardNumberElement.getText();
+
+        assertEquals(cardName, cardNameDisplayed);
+        assertEquals(cardNumber, cardNumberDisplayed);
+
+        //card icon
+        By cardIconElement = d.createByTagAndContainsResourceId("android.widget.ImageView","cards_list_item_icon");
+
+        //available balance
+        MobileElement availableBalanceLabel = d.createMobileElementByContainsId("cards_list_item_available_balance_label");
+        assertEquals("Raspoloživo stanje:", availableBalanceLabel.getText());
+
+        MobileElement availableBalanceCurrency = d.createMobileElementByContainsId("card_balance_item_currency");
+        assertEquals("RSD", availableBalanceCurrency.getText().trim());
+
+        MobileElement availableBalanceAmountInt = d.createMobileElementByContainsId("card_balance_item_int");
+        MobileElement availableBalanceAmountDecimal = d.createMobileElementByContainsId("card_balance_item_decimal");
+        String intPart = availableBalanceAmountInt.getText().trim();
+        String decimalPart = availableBalanceAmountDecimal.getText().trim();
+
+        DataManager.userObject.put("cardAvailableBalanceINT", intPart);
+        DataManager.userObject.put("cardAvailableBalanceDEC", decimalPart);
+
+//        System.out.println("Available balance: " + intPart.trim().replace(".","") + decimalPart.trim().replace(",", "."));
+//        double balance = Double.parseDouble((intPart + decimalPart));
+//        System.out.println("Available balance: " + balance);
+//        DataManager.userObject.put("cardAvailableBalance", balance);
+
+    }
+
+
+    @And("Check if card is opened correctly for user {string}")
+    public void checkIfCardIsOpenedCorrectlyForUser(String rowindex) throws Throwable {
+
+        String cardName = DataManager.getDataFromHashDatamap(rowindex,"cardName");
+        String cardNumber = DataManager.getDataFromHashDatamap(rowindex, "cardNumber");
+        MobileElement cardNameDisplayed = d.createMobileElementByContainsId("cards_history_title");
+        MobileElement cardNumberDisplayed = d.createMobileElementByContainsId("cards_history_subtitle");
+        assertEquals(cardName, cardNameDisplayed.getText().trim());
+        assertEquals(cardNumber, cardNumberDisplayed.getText().trim());
+
+
+        MobileElement availableBalanceLabel = d.createMobileElementByContainsId("cards_history_available_amount_label");
+        MobileElement availableBalanceInt = d.createMobileElementByContainsId("cards_history_available_amount_int");
+        MobileElement availableBalanceDecimal = d.createMobileElementByContainsId("cards_history_available_amount_decimal");
+        MobileElement availableBalanceCurrency = d.createMobileElementByContainsId("cards_history_available_amount_currency");
+
+        assertEquals("Stanje:", availableBalanceLabel.getText().trim());
+        assertEquals(DataManager.userObject.get("cardAvailableBalanceINT"), availableBalanceInt.getText().trim());
+        assertEquals(DataManager.userObject.get("cardAvailableBalanceDEC"), availableBalanceDecimal.getText().trim());
+        assertEquals("RSD", availableBalanceCurrency.getText().trim());
+
+
+        By card_image = d.createByContainsResourceId("card_image");
+        hp.assertElementDisplayed(card_image);
+
+
+
+
+
+    }
+
+    @And("Click on more options for the card")
+    public void clickOnMoreOptionsForTheCard() throws Throwable {
+
+        MobileElement plus_button = d.createMobileElementByTagAndContainsResourceId("android.widget.ImageButton", "btn_context_menu");
+        hp.ClickOnElement(plus_button);
+    }
+
+    @And("Click on card details")
+    public void clickOnCardDetails() throws Throwable{
+        MobileElement cardDetails = tx.createMobileElementByTextContains("Detalji kartice");
+        hp.ClickOnElement(cardDetails);
     }
 }

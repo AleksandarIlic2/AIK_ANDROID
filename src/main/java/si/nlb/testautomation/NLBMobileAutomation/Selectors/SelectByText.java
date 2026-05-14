@@ -124,4 +124,16 @@ public class SelectByText {
         return MobileBy.xpath("//android.widget.LinearLayout//*[@text = '"+text1+"']/preceding::*[contains(@text,'"+text2+"')][1]");
     }
 
+    public MobileElement createMobileElementByTextContains(String text) {
+
+        MobileElement element = null;
+        String xPath = "//*[contains(@text,'" + text + "')]";
+        if (Base.testPlatform.equals("iOS")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        if (Base.testPlatform.equals("Android")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        return element;
+    }
 }
