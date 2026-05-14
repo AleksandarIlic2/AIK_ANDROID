@@ -89,8 +89,7 @@ Scenario Outline: Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
   And Click on element by text "IPS"
   And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/galleryButton"
   And Click on element by text "Download"
-
-  #And Click on element by id "com.google.android.apps.photos:id/recycler_view" on "2" children
+  And Wait "10" seconds
   And Click on element by desc "Photo taken on May 14, 2026 8:51 AM"
   And Click on element by text "Potvrdi"
   And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"

@@ -1045,8 +1045,8 @@ public class Steps {
 
     @And("Enter PIN")
     public void enterPIN() {
-        //driver.getKeyboard().pressKey("2804"); //ljiljanakovac  Acin user
-        driver.getKeyboard().pressKey("9128"); //snezana.nikolic
+        driver.getKeyboard().pressKey("2804"); //ljiljanakovac  Acin user
+        //driver.getKeyboard().pressKey("9128"); //snezana.nikolic
 
     }
 
@@ -9732,5 +9732,15 @@ public class Steps {
     public void clickOnCardDetails() throws Throwable{
         MobileElement cardDetails = tx.createMobileElementByTextContains("Detalji kartice");
         hp.ClickOnElement(cardDetails);
+    }
+
+    @And("Click on element by id {string} on {string} children")
+    public void clickOnElementByIdOnChildren(String id, String children) {
+        int number = Integer.parseInt(children);
+        By element = d.createElementByResourceId(id);
+        WebElement parent = driver.findElement(element);
+        List<WebElement> childElements =
+                parent.findElements(By.xpath("./*"));
+        childElements.get(number).click();
     }
 }
