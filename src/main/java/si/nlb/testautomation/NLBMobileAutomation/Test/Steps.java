@@ -1043,10 +1043,13 @@ public class Steps {
         rh.clickOnButtonByName(elementName);
     }
 
-    @And("Enter PIN")
-    public void enterPIN() {
-        driver.getKeyboard().pressKey("2804"); //ljiljanakovac  Acin user
-        //driver.getKeyboard().pressKey("9128"); //snezana.nikolic
+    @And("Enter PIN for user {string}")
+    public void enterPINforUser(String rowindex) {
+        if(rowindex=="1")
+            driver.getKeyboard().pressKey("9128"); //snezana.nikolic
+        else if(rowindex=="2")
+            driver.getKeyboard().pressKey("2804"); //ljiljanakovac  Acin user
+
 
     }
 
@@ -9732,6 +9735,19 @@ public class Steps {
     public void clickOnCardDetails() throws Throwable{
         MobileElement cardDetails = tx.createMobileElementByTextContains("Detalji kartice");
         hp.ClickOnElement(cardDetails);
+    }
+
+    @And("Check if card details are correctly displayed for user <{string}>")
+    public void checkIfCardDetailsAreCorrectlyDisplayedForUser(String rowindex) {
+        String cardName = DataManager.getDataFromHashDatamap(rowindex,"cardName");
+        String cardNumber = DataManager.getDataFromHashDatamap(rowindex, "cardNumber");
+        assertThatTextHasFirstFollowingSiblingWithText("Naziv kartice",cardName);
+        assertThatTextHasFirstFollowingSiblingWithText("Broj kartice",cardNumber);
+        //TODO sacuvati ranije tip kartice?
+        assertThatTextHasFirstFollowingSiblingWithText("Tip kartice","DEBIT");
+
+        String availableBalance = (String) DataManager.userObject.get("cardAvailableBalanceINT") + DataManager.userObject.get("cardAvailableBalanceDEC");
+        assertThatTextHasFirstFollowingSiblingWithText("Raspolozivo stanje",availableBalance + " RSD");
     }
 
     @And("Click on element by id {string} on {string} children")
