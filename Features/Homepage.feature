@@ -8,7 +8,6 @@ Feature: Product_Summary
     And Enter PIN
     And Wait for login page to load
     And Assert text from excel "1" columnName "currentDomesticAccountBBAN" in element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_number"
-    And Assert element by text "asdadasd"
     And Scroll down until element with text "Vidi ceo promet" is in view
 #    And Click on element by text "Štednja"
 #    And Click on element by text "Oročeni depozit u valuti RSD"
@@ -52,7 +51,7 @@ Feature: Product_Summary
       | rowindex |
       |        1 |
 
-
+#note: Isto verovatno izgleda i SC obicnog placanja samo se na kraju dobije poruka uspesno placanje
   @Placanje_RSD_Nedovoljno_Sredstava[MOB_ANDROID]
   Scenario Outline: Placanje_RSD_Nedovoljno_Sredstava[MOB_ANDROID]
 
@@ -81,6 +80,27 @@ Feature: Product_Summary
     Examples:
       | rowindex |
       |        1 |
+
+#note: Isto verovatno izgleda i SC obicnog placanja samo se na kraju dobije poruka uspesno placanje
+@Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
+Scenario Outline: Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
+
+  Given Open Application
+  And Click on element by text "IPS"
+  And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/galleryButton"
+  And Click on element by text "Download"
+
+  #And Click on element by id "com.google.android.apps.photos:id/recycler_view" on "2" children
+  And Click on element by desc "Photo taken on May 14, 2026 8:51 AM"
+  And Click on element by text "Potvrdi"
+  And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
+  And Enter PIN
+
+
+
+  Examples:
+    | rowindex |
+    |        1 |
 
 
 
