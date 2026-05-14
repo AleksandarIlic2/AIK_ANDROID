@@ -73,7 +73,7 @@ Feature: Product_Summary
     And Scroll down until element with text "Potvrdi" is in view
     And Click on element by text "Potvrdi"
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-    And Enter PIN
+    And Enter PIN for user "<rowindex>"
     And Assert element by text "Greška"
     And Assert element by text "Nalog PP nije uspešno kreiran."
     #And Click on "2" element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/check_box"

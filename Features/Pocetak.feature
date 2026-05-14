@@ -5,13 +5,12 @@ Feature: Pocetak
 
     Given Open Application
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-    And Enter PIN
+    And Enter PIN for user "<rowindex>"
     And Wait for login page to load
     And Choose option "Kartice" from bottom menu
     And Bank logo still displayed
     And Page title is "Kartice"
     And Check if card is correctly displayed for user "<rowindex>"
-    #TODO
     And Click on element by text from excel "<rowindex>" columnName "cardNumber"
     And Check if card is opened correctly for user "<rowindex>"
     And Click on more options for the card
@@ -29,7 +28,7 @@ Feature: Pocetak
 
     Given Open Application
     And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
-    And Enter PIN for user "1"
+    And Enter PIN for user "<rowindex>"
     And Wait for login page to load
     And Choose option "Ponude" from bottom menu
     And Bank logo still displayed
