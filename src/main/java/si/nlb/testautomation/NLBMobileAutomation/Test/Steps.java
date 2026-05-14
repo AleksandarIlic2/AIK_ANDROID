@@ -9747,4 +9747,14 @@ public class Steps {
         String availableBalance = (String) DataManager.userObject.get("cardAvailableBalanceINT") + DataManager.userObject.get("cardAvailableBalanceDEC");
         assertThatTextHasFirstFollowingSiblingWithText("Raspolozivo stanje",availableBalance + " RSD");
     }
+
+    @And("Click on element by id {string} on {string} children")
+    public void clickOnElementByIdOnChildren(String id, String children) {
+        int number = Integer.parseInt(children);
+        By element = d.createElementByResourceId(id);
+        WebElement parent = driver.findElement(element);
+        List<WebElement> childElements =
+                parent.findElements(By.xpath("./*"));
+        childElements.get(number).click();
+    }
 }
