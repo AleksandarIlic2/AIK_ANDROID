@@ -1045,9 +1045,9 @@ public class Steps {
 
     @And("Enter PIN for user {string}")
     public void enterPINforUser(String rowindex) {
-        if(rowindex=="1")
+        if(Objects.equals(rowindex, "1"))
             driver.getKeyboard().pressKey("9128"); //snezana.nikolic
-        else if(rowindex=="2")
+        else if(Objects.equals(rowindex, "2"))
             driver.getKeyboard().pressKey("2804"); //ljiljanakovac  Acin user
 
 
