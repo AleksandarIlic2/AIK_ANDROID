@@ -9611,7 +9611,18 @@ public class Steps {
         By elWait = d.createElementById(id);
         WaitHelpers.waitForElement(elWait);
         List<MobileElement> mobileElementList = d.createElementsById(id);
-        mobileElementList.get(number - 1).sendKeys(text);
+        String randomString = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+
+        if (text.equals("1"))
+        {
+            mobileElementList.get(number - 1).sendKeys(text);
+        }
+        else {
+            mobileElementList.get(number - 1).sendKeys(randomString);
+        }
+
+        DataManager.userObject.put(text, randomString);
+
         //hp.ClickOnElement(mobileElementList.get(number - 1));
 
     }
@@ -9622,7 +9633,10 @@ public class Steps {
         By elWait = d.createElementById(id);
         WaitHelpers.waitForElement(elWait);
         List<MobileElement> mobileElementList = d.createElementsById(id);
+        System.out.println("ROW:" + rowIndex);
+        System.out.println("COLUMN:" + columnName);
         String racunZaUplatu = DataManager.getDataFromHashDatamap(rowIndex, columnName);
+        System.out.println("RACUN ZA UPLATU: " + racunZaUplatu);
         mobileElementList.get(number - 1).sendKeys(racunZaUplatu);
     }
 
