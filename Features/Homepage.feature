@@ -115,14 +115,14 @@ Scenario Outline: Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
     And Click on element by text "Lični podaci"
     And Assert element by text "LJILJANA KOVAČ"
     And Wait for element by text "Tip identifikacionog dokumenta"
-    And Assert element by text "Tip identifikacionog dokumenta" has first following sibling contains text "Lična karta"
-    And Assert element by text "Broj identifikacionog dokumenta" has following sibling with text from excel "1" columnName "Broj_identifikacionog_dokumenta"
-    And Assert element by text "Datum važenja identifikacionog dokumenta" has following sibling with text from excel "1" columnName "Datum_važenja_identifikacionog_dokumenta"
-    And Assert element by text "Adresa iz identifikacionog dokumenta" has following sibling with text from excel "1" columnName "Adresa_iz_identifikacionog_dokumenta"
-    And Assert element by text "Kućni telefon" has following sibling with text from excel "1" columnName "Kucni_telefon"
+    And Assert element by text "Tip identifikacionog dokumenta" has following sibling with text from excel "<rowindex>" columnName "Tip_identifikacionog_dokumenta"
+    And Assert element by text "Broj identifikacionog dokumenta" has following sibling with text from excel "<rowindex>" columnName "Broj_identifikacionog_dokumenta"
+    And Assert element by text "Datum važenja identifikacionog dokumenta" has following sibling with text from excel "<rowindex>" columnName "Datum_važenja_identifikacionog_dokumenta"
+    And Assert element by text "Adresa iz identifikacionog dokumenta" has following sibling with text from excel "<rowindex>" columnName "Adresa_iz_identifikacionog_dokumenta"
+    And Assert element by text "Kućni telefon" has following sibling with text from excel "<rowindex>" columnName "Kucni_telefon"
     And Scroll down until element with text "Podaci nisu ispravni?" is in view
-    And Assert element by text "Mobilni telefon" has following sibling with text from excel "1" columnName "Mobilni_telefon"
-    And Assert element by text "E-mail adresa" has following sibling with text from excel "1" columnName "E-mail_adresa"
+    And Assert element by text "Mobilni telefon" has following sibling with text from excel "<rowindex>" columnName "Mobilni_telefon"
+    And Assert element by text "E-mail adresa" has following sibling with text from excel "<rowindex>" columnName "E-mail_adresa"
 
 
     Examples:
