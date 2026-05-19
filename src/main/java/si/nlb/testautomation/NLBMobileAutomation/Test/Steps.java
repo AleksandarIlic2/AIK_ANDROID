@@ -3786,6 +3786,7 @@ public class Steps {
     public void assertCategoryFromKeyIsShown(String key) {
         String category = (String) DataManager.userObject.get(key);
         MobileElement element = x.createMobileElementByText(category);
+        System.out.println("ELEMENT: " + category);
         Assert.assertTrue(element.isDisplayed());
     }
 
@@ -4503,10 +4504,12 @@ public class Steps {
 
     }
 
-    @And("Assert To field in Date transactions filter has today date")
-    public void assertToFieldInDateTransactionsFilterHasTodayDate() {
-        String expected = rh.getTodayDateInFormat("d.M.yyyy").replace(".", ".\u00A0");
-        MobileElement element = d.createMobileElementByResourceId("nlb-input-date-to");
+    @And("Assert {string} field has first following sibling with today date")
+    public void assertToFieldInDateTransactionsFilterHasTodayDate(String text) {
+        //Assert "Datum izvršenja" field has first following sibling with today date
+        String xPath = "(//*[@text='" + text + "']//following-sibling::*)[1]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        String expected = rh.getTodayDateInFormat("dd.MM.yyyy.");
         Assert.assertEquals(expected, element.getAttribute("text"));
     }
 
@@ -9770,5 +9773,31 @@ public class Steps {
         List<WebElement> childElements =
                 parent.findElements(By.xpath("./*"));
         childElements.get(number).click();
+    }
+
+
+    @And("Find element by text {string} and save first following sibling text in key {string}")
+    public void findElementByTextAndSaveFirstFollowingSiblingTextInKey(String text, String key) {
+        String xPath = "//*[@text='" + text + "']/following-sibling::*[1]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        DataManager.userObject.put(key, element.getText().trim());
+    }
+
+    @And("Click on back button")
+    public void clickOnBackButton() {
+        String xPath = "//android.widget.ImageButton[contains(@resource-id, 'back_button')]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        element.click();
+    }
+
+    @And("Assert text from key {string} in element by id {string} is equal to old values minus amount")
+    public void assertTextFromKeyInElementByIdIsEqualToOldValuesMinusAmount(String key, String id) {
+        String expectedValue = (String) DataManager.userObject.get(key);
+        BigDecimal expected = new BigDecimal(expectedValue);
+        BigDecimal result = expected.subtract(BigDecimal.ONE);
+        String expectedAfterSubtract = result.toPlainString();
+        MobileElement element = d.createMobileElementByResourceId(id);
+        Assert.assertEquals(expectedAfterSubtract, element.getText());
+
     }
 }
