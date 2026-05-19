@@ -10001,8 +10001,7 @@ public class Steps {
     }
     @And("Click pay")
     public void clickPay() {
-
-        MobileElement payButton = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_continue_button");
+        MobileElement payButton = d.createMobileElementByTextAndContainsResourceId("Plati","_button"); //landing_continue_button, confirmation_confirm__button
         payButton.click();
     }
 
@@ -10060,7 +10059,8 @@ public class Steps {
         return text.replaceAll("\\s+", " ").trim();
     }
 
-    public void verifyOptionsMenu() {
+    @And("Verify options after payment")
+    public void verifyOptionsAfterPayment() {
 
         List<String> expectedOptions = Arrays.asList(
                 "Novi interni prenos",
@@ -10084,7 +10084,6 @@ public class Steps {
             System.out.println("ACTUAL  : " + actualOption);
 
             assertTrue("Opcija nije vidljiva: " + expectedOption, optionElement.isDisplayed());
-
             assertEquals("Pogrešan naziv opcije na poziciji: " + i, expectedOption, actualOption);
         }
     }

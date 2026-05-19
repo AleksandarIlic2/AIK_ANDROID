@@ -62,7 +62,10 @@ Feature: Pocetak
     And Click pay
     And Validate internal transfer details page for user "<rowindex>"
     And Click pay
-    And Assert element by text ""
+    And Wait "3" seconds
+    And Page title is "Uspešno"
+    And Assert element by text "Plaćanje je uspešno izvršeno."
+    And Verify options after payment
 
 
 

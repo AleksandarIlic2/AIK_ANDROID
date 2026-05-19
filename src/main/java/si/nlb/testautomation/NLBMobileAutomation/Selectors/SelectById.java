@@ -159,4 +159,16 @@ public class SelectById {
         }
         return element;
     }
+
+    public MobileElement createMobileElementByTextAndContainsResourceId(String text, String idp_part) {
+        MobileElement element = null;
+        String xPath = "//*[contains(@resource-id,\"" + idp_part + "\") and @text=\"" + text + "\"]";
+        if (Base.testPlatform.equals("iOS")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        if (Base.testPlatform.equals("Android")){
+            element = (MobileElement) driver.findElementByXPath(xPath);
+        }
+        return element;
+    }
 }
