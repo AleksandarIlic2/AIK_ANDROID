@@ -57,7 +57,9 @@ Feature: Pocetak
     And Validate payment page options
     And Click on option "Interni prenos"
     And Page title is "Interni prenos"
-    And Validate internal transfer page
+    And Validate internal transfer page for user "<rowindex>"
+    And Enter amount and pay
+
 
     
     Examples:

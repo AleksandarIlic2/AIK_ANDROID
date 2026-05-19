@@ -150,7 +150,7 @@ public class SelectById {
 
     public MobileElement createMobileElementById(String id) {
         MobileElement element = null;
-        String xPath = "//*[@resource-id=\"" + id + "\")]";
+        String xPath = "//*[@resource-id=\"" + id + "\"]";
         if (Base.testPlatform.equals("iOS")){
             element = (MobileElement) driver.findElementByXPath(xPath);
         }

@@ -9653,6 +9653,13 @@ public class Steps {
         assertEquals(title, element.getText().trim());
     }
 
+    @And("Click on back button")
+    public void clickOnBackButton(String title) {
+        String xPath = "//android.widget.ImageButtton[contains(@resource-id, 'back_button')]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        element.click();
+    }
+
     @And("Check if card is correctly displayed for user {string}")
     public void checkIfCardIsCorrectlyDisplayedForUser(String rowindex) {
         WaitHelpers.waitForSeconds(5);
@@ -9879,29 +9886,115 @@ public class Steps {
         option.click();
     }
 
-    @And("Validate internal transfer page")
-    public void validateInternalTransferPage() {
+    @And("Validate internal transfer page for user {string}")
+    public void validateInternalTransferPageForUser(String rowindex) {
 
-        MobileElement fromAcc = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_from_account_text");
-        assertEquals("Sa računa:",fromAcc.getText().trim());
-
+        // from account
+        MobileElement fromAccLabel = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_from_account_text");
+        assertEquals("Sa računa:",fromAccLabel.getText().trim());
+        //da li je dobar redoslijed
         checkIfElementByResourceIdIsFollowedByElementWithResourceId("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_from_account_text","eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_debit_accounts_rv");
 
-        MobileElement toAcc = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_to_account_text");
-        assertEquals("Na račun:",toAcc.getText().trim());
+        //provjera svih elemenata iz racuna posiljaoca
+        MobileElement fromAcc = x.createMobileElementByXpath("(//*[@resource-id=\"eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_debit_accounts_rv\"]//*[@resource-id=\"eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_card\"])[1]");
+        MobileElement fromAccText = fromAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_name");
+        MobileElement fromAccNumber = fromAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_number");
+        String accountNumber = DataManager.getDataFromHashDatamap(rowindex,"racun");
+        DataManager.userObject.put("fromAccNumber",fromAccNumber.getText().trim());
 
-        checkIfElementByResourceIdIsFollowedByElementWithResourceId("landing_to_account_text","eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_credit_accounts_rv");
+        assertEquals("Transakcioni račun", fromAccText.getText().trim());
+        assertEquals(accountNumber, fromAccNumber.getText().trim());
 
-        
+        MobileElement fromAccBalanceLabel = fromAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_label");
+        MobileElement fromAccBalanceInt = fromAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_int");
+        MobileElement fromAccBalanceDecimal = fromAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_decimal");
+        MobileElement fromAccBalanceCurrency = fromAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_currency");
+
+        assertEquals("Raspoloživo stanje:", fromAccBalanceLabel.getText().trim());
+        assertTrue(fromAccBalanceInt.getText().trim().matches("(-)?\\d+(\\.\\d+)?"));
+        assertTrue(fromAccBalanceDecimal.getText().trim().matches(",\\d{2}"));
+        assertEquals("RSD", fromAccBalanceCurrency.getText().trim());
+
+        // to account
+        MobileElement toAccLabel = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_to_account_text");
+        assertEquals("Na račun:",toAccLabel.getText().trim());
+        checkIfElementByResourceIdIsFollowedByElementWithResourceId("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_to_account_text","eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_credit_accounts_rv");
+
+        //provjera svih elemenata iz racuna primaoca
+        MobileElement toAcc = x.createMobileElementByXpath("(//*[@resource-id=\"eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_credit_accounts_rv\"]//*[@resource-id=\"eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_card\"])[1]");
+
+        MobileElement toAccText = toAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_name");
+        MobileElement toAccNumber = toAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_number");
+        String accountNumberTo = DataManager.getDataFromHashDatamap(rowindex,"racun2");
+
+        DataManager.userObject.put("toAccNumber",toAccNumber.getText().trim());
 
 
+        assertEquals("Transakcioni račun", toAccText.getText().trim());
+        assertEquals(accountNumberTo, toAccNumber.getText().trim());
+
+        MobileElement toAccBalanceLabel = toAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_label");
+        MobileElement toAccBalanceInt = toAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_int");
+        MobileElement toAccBalanceDecimal = toAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_decimal");
+        MobileElement toAccBalanceCurrency = toAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_currency");
+
+        assertEquals("Raspoloživo stanje:", toAccBalanceLabel.getText().trim());
+        assertTrue(toAccBalanceInt.getText().trim().matches("(-)?\\d+(\\.\\d+)?"));
+        assertTrue(toAccBalanceDecimal.getText().trim().matches(",\\d{2}"));
+        assertEquals("RSD", toAccBalanceCurrency.getText().trim());
+        DataManager.userObject.put("availableBalance",toAccBalanceInt.getText().replace(".","").trim() + toAccBalanceDecimal.getText().replace(",",".").trim() + " RSD");
+
+
+        //provjera polja za unos iznosa uplate
+        MobileElement amountContainer = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_amount_outline_styleable_edit_text");
+        MobileElement amountHint = amountContainer.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_hint_text");
+
+        assertTrue(amountContainer.isDisplayed());
+        assertEquals("Iznos", amountHint.getText().trim());
+        assertTrue(amountHint.isDisplayed());
+
+        MobileElement amountInput = amountContainer.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text");
+
+        assertEquals("0,00", amountInput.getText().trim());
+        assertTrue(amountInput.isDisplayed());
+        assertTrue(amountInput.isEnabled());
+        assertTrue(amountInput.getAttribute("clickable").equals("true"));
+
+        MobileElement amountSeparator = amountContainer.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/end_text_separator");
+        assertTrue(amountSeparator.isDisplayed());
+        MobileElement amountCurrency = amountContainer.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_end_text");
+        assertEquals("RSD", amountCurrency.getText().trim());
+        assertTrue(amountCurrency.isDisplayed());
+
+
+        //provjeri da li je tu dugme Plati i da li je clickable
+        MobileElement payButton = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_continue_button");
+        assertTrue(payButton.isDisplayed());
+        assertTrue(payButton.isEnabled());
+        assertEquals("Plati", payButton.getText().trim());
+        assertEquals("true", payButton.getAttribute("clickable"));
     }
 
     private void checkIfElementByResourceIdIsFollowedByElementWithResourceId(String resourceId1, String resourceId2) {
 
         String xPath = "//*[@resource-id='" + resourceId1 + "']/following-sibling::*[1]";
         MobileElement element = x.createMobileElementByXpath(xPath);
-        Assert.assertEquals(resourceId2, element.getId());
+        Assert.assertEquals(resourceId2, element.getAttribute("resource-id"));
 
+
+
+    }
+
+    @And("Enter amount and pay")
+    public void enterAmountAndPay() {
+
+        MobileElement amountContainer = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_amount_outline_styleable_edit_text");
+        MobileElement amountInput = amountContainer.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text");
+        amountInput.clear();
+        amountInput.sendKeys("100");
+        //driver.hideKeyboard();
+
+        MobileElement payButton = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_continue_button");
+        payButton.click();
     }
 }
