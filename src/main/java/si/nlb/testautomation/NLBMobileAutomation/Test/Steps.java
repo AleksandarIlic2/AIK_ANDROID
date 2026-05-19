@@ -9659,13 +9659,6 @@ public class Steps {
         assertEquals(title, element.getText().trim());
     }
 
-    @And("Click on back button")
-    public void clickOnBackButton(String title) {
-        String xPath = "//android.widget.ImageButtton[contains(@resource-id, 'back_button')]";
-        MobileElement element = x.createMobileElementByXpath(xPath);
-        element.click();
-    }
-
     @And("Check if card is correctly displayed for user {string}")
     public void checkIfCardIsCorrectlyDisplayedForUser(String rowindex) {
         WaitHelpers.waitForSeconds(5);
@@ -9781,25 +9774,27 @@ public class Steps {
     }
 
     @And("Click on back button")
-    public void clickOnBackButton() {
+    public void clickOnBackButton() throws InterruptedException {
         String xPath = "//android.widget.ImageButton[contains(@resource-id, 'back_button')]";
-        MobileElement element = x.createMobileElementByXpath(xPath);
-        element.click();
+        By element = d.createByContainsResourceId("back_button");
+        WaitHelpers.waitForElement(element);
+        MobileElement elementMobile = x.createMobileElementByXpath(xPath);
+        elementMobile.click();
     }
 
     @And("Assert text from key {string} in element by id {string} is equal to old values minus amount")
     public void assertTextFromKeyInElementByIdIsEqualToOldValuesMinusAmount(String key, String id) {
         String expectedValue = (String) DataManager.userObject.get(key);
         expectedValue = expectedValue.replace(".", "").replace(" ", "");
-        System.out.println("EXPECTED VALUE MINUS AMOUNT: " + expectedValue);
-
-        BigDecimal expected = new BigDecimal(expectedValue);
-        BigDecimal result = expected.subtract(BigDecimal.ONE);
-        String expectedAfterSubtract = result.toPlainString();
-
-        MobileElement element = d.createMobileElementByResourceId(id);
-        System.out.println("PROCITANO SA TELEFONA: " + element.getText());
-        Assert.assertEquals(expectedAfterSubtract, element.getText());
+        Double expected = Double.parseDouble(expectedValue);
+        Double result = expected - 1;
+        System.out.println("EXPECTED VALUE: " + expected);
+        System.out.println("RESULT (expected - 1): " + result);
+        String actualValue = d.createMobileElementByResourceId(id).getText();
+        actualValue = actualValue.replace(".", "").replace(" ", "");
+        Double actual = Double.parseDouble(actualValue);
+        System.out.println("ACTUAL VALUE: " + actual);
+        Assert.assertEquals(result, actual, 0.001);
 
     }
 
