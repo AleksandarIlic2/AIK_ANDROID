@@ -9790,10 +9790,15 @@ public class Steps {
     @And("Assert text from key {string} in element by id {string} is equal to old values minus amount")
     public void assertTextFromKeyInElementByIdIsEqualToOldValuesMinusAmount(String key, String id) {
         String expectedValue = (String) DataManager.userObject.get(key);
+        expectedValue = expectedValue.replace(".", "").replace(" ", "");
+        System.out.println("EXPECTED VALUE MINUS AMOUNT: " + expectedValue);
+
         BigDecimal expected = new BigDecimal(expectedValue);
         BigDecimal result = expected.subtract(BigDecimal.ONE);
         String expectedAfterSubtract = result.toPlainString();
+
         MobileElement element = d.createMobileElementByResourceId(id);
+        System.out.println("PROCITANO SA TELEFONA: " + element.getText());
         Assert.assertEquals(expectedAfterSubtract, element.getText());
 
     }
