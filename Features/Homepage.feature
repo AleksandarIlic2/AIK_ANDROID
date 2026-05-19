@@ -61,6 +61,8 @@ Feature: Product_Summary
     And Wait for login page to load
     And Choose option "Plaćanja" from bottom menu
     And Click on element by text "Plaćanje RSD"
+    And Save text from element id: "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_int" in "stanje"
+    
     And Enter text "1" into field by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text" and index "1"
     And Enter text from excel "1" columnName "Adresa_iz_identifikacionog_dokumenta" in element id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text" and index "2"
     And Enter text "randomImePrimalac" into field by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text" and index "3"
@@ -75,9 +77,35 @@ Feature: Product_Summary
     And Enter PIN for user "<rowindex>"
     And Click on element by text "Pregled plaćanja"
     And Click on element by text from key "randomImePrimalac"
-    And Assert element by text from excel "<rowindex>" columnName "racun"
-    
+    And Assert element by text "Plaćeno sa rаčuna" has first following sibling from excel "<rowindex>" columnName "racun"
+    And Assert category from key "randomImePrimalac" is shown
+    And Assert element by text "Račun primaoca" has first following sibling from excel "1" columnName "Adresa_iz_identifikacionog_dokumenta"
+    And Assert "Datum izvršenja" field has first following sibling with today date
+    And Assert "Datum obrade" field has first following sibling with today date
+    And Scroll down until element with text "Ponovi plaćanje" is in view
+    And Find element by text "Referenca" and save first following sibling text in key "referenca"
+    And Assert element by text "Iznos" has first following sibling contains text "1,00 RSD"
+    And Assert element by text "Provizija banke" has first following sibling contains text "0,00 RSD"
+    And Assert element by text "Kanal" has first following sibling contains text "Mobile"
+    And Assert element by text "Status transakcije" has first following sibling contains text "Izvršen transfer"
+    And Assert element by text "Ponovi plaćanje"    
+    And Assert element by text "Preuzmi PDF"
+    And Scroll up until element with text "Detalji transakcije" is in view
+    And Click on back button
+    And Wait for element by text "Pregled plaćanja"
+    And Click on back button
+    And Choose option "Početna" from bottom menu
 
+    #And Assert text from key "" in element by id ""
+    And Assert text from key "stanje" in element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_int" is equal to old values minus amount
+    
+    And Scroll down until element with text "Vidi ceo promet" is in view
+    And Click on "1" element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/accounts_history_item_icon"
+    And Wait "10" seconds
+    And Assert category from key "referenca" is shown
+    And Assert "Datum izvršenja" field has first following sibling with today date
+    And Assert "Datum obrade" field has first following sibling with today date
+    And Assert element by text "Uplata/Isplata" has first following sibling contains text "-1,00 RSD"
 
    # And Assert element by text "Greška"
    # And Assert element by text "Nalog PP nije uspešno kreiran."
@@ -156,6 +184,19 @@ Scenario Outline: Licni_Podaci[MOB_ANDROID]
     And Assert element by text "Mobilni telefon" has following sibling with text from excel "<rowindex>" columnName "Mobilni_telefon"
     And Assert element by text "E-mail adresa" has following sibling with text from excel "<rowindex>" columnName "E-mail_adresa"
 
+
+    Examples:
+      | rowindex |
+      |        2 |
+
+
+  @Pregled_Transakcija[MOB_ANDROID]
+  Scenario Outline: Pregled_Transakcija[MOB_ANDROID]
+
+    Given Open Application
+    And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
+    And Enter PIN for user "<rowindex>"
+    And Wait for login page to load
 
     Examples:
       | rowindex |

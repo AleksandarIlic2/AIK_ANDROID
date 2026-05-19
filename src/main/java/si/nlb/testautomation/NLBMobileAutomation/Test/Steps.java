@@ -3778,6 +3778,7 @@ public class Steps {
     public void assertCategoryFromKeyIsShown(String key) {
         String category = (String) DataManager.userObject.get(key);
         MobileElement element = x.createMobileElementByText(category);
+        System.out.println("ELEMENT: " + category);
         Assert.assertTrue(element.isDisplayed());
     }
 
@@ -4495,10 +4496,12 @@ public class Steps {
 
     }
 
-    @And("Assert To field in Date transactions filter has today date")
-    public void assertToFieldInDateTransactionsFilterHasTodayDate() {
-        String expected = rh.getTodayDateInFormat("d.M.yyyy").replace(".", ".\u00A0");
-        MobileElement element = d.createMobileElementByResourceId("nlb-input-date-to");
+    @And("Assert {string} field has first following sibling with today date")
+    public void assertToFieldInDateTransactionsFilterHasTodayDate(String text) {
+        //Assert "Datum izvršenja" field has first following sibling with today date
+        String xPath = "(//*[@text='" + text + "']//following-sibling::*)[1]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        String expected = rh.getTodayDateInFormat("dd.MM.yyyy.");
         Assert.assertEquals(expected, element.getAttribute("text"));
     }
 
@@ -9656,13 +9659,6 @@ public class Steps {
         assertEquals(title, element.getText().trim());
     }
 
-    @And("Click on back button")
-    public void clickOnBackButton(String title) {
-        String xPath = "//android.widget.ImageButtton[contains(@resource-id, 'back_button')]";
-        MobileElement element = x.createMobileElementByXpath(xPath);
-        element.click();
-    }
-
     @And("Check if card is correctly displayed for user {string}")
     public void checkIfCardIsCorrectlyDisplayedForUser(String rowindex) {
         WaitHelpers.waitForSeconds(5);
@@ -9767,6 +9763,39 @@ public class Steps {
         List<MobileElement> childElements =
                 parent.findElements(By.xpath("./*"));
         childElements.get(number).click();
+    }
+
+
+    @And("Find element by text {string} and save first following sibling text in key {string}")
+    public void findElementByTextAndSaveFirstFollowingSiblingTextInKey(String text, String key) {
+        String xPath = "//*[@text='" + text + "']/following-sibling::*[1]";
+        MobileElement element = x.createMobileElementByXpath(xPath);
+        DataManager.userObject.put(key, element.getText().trim());
+    }
+
+    @And("Click on back button")
+    public void clickOnBackButton() throws InterruptedException {
+        String xPath = "//android.widget.ImageButton[contains(@resource-id, 'back_button')]";
+        By element = d.createByContainsResourceId("back_button");
+        WaitHelpers.waitForElement(element);
+        MobileElement elementMobile = x.createMobileElementByXpath(xPath);
+        elementMobile.click();
+    }
+
+    @And("Assert text from key {string} in element by id {string} is equal to old values minus amount")
+    public void assertTextFromKeyInElementByIdIsEqualToOldValuesMinusAmount(String key, String id) {
+        String expectedValue = (String) DataManager.userObject.get(key);
+        expectedValue = expectedValue.replace(".", "").replace(" ", "");
+        Double expected = Double.parseDouble(expectedValue);
+        Double result = expected - 1;
+        System.out.println("EXPECTED VALUE: " + expected);
+        System.out.println("RESULT (expected - 1): " + result);
+        String actualValue = d.createMobileElementByResourceId(id).getText();
+        actualValue = actualValue.replace(".", "").replace(" ", "");
+        Double actual = Double.parseDouble(actualValue);
+        System.out.println("ACTUAL VALUE: " + actual);
+        Assert.assertEquals(result, actual, 0.001);
+
     }
 
     @And("Validate tabs in offers")
