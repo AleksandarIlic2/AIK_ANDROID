@@ -58,10 +58,15 @@ Feature: Pocetak
     And Click on option "Interni prenos"
     And Page title is "Interni prenos"
     And Validate internal transfer page for user "<rowindex>"
-    And Enter amount and pay
+    And Enter amount "100,00"
+    And Click pay
+    And Validate internal transfer details page for user "<rowindex>"
+    And Click pay
+    And Assert element by text ""
 
 
-    
+
+
     Examples:
       | rowindex |
       |        1 |

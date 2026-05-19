@@ -28,11 +28,13 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 
+import javax.xml.crypto.Data;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.awt.*;
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -43,6 +45,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 import static org.junit.Assert.assertEquals;
@@ -301,7 +304,7 @@ public class Steps {
     @And("Assert field {string} is empty using xpath")
     public void assertFieldIsEmptyUsingXpath(String text) {
         By inputField = MobileBy.xpath("//XCUIElementTypeTextView");
-        WebElement element = driver.findElement(inputField);
+        MobileElement element = (MobileElement) driver.findElement(inputField);
         String a = element.getText();
         if (a.isEmpty())
             Log.info("!!!!!!! Field: " + text + " is empty !!!!!!!!");
@@ -6257,7 +6260,7 @@ public class Steps {
         String accountName = DataManager.getDataFromHashDatamap(rowindex, columnName1);
         String accountIban = DataManager.getDataFromHashDatamap(rowindex, columnName2);
         String xPath = "//*[@resource-id='nlb-e-invoice-debtor-card']//*[@text='" + accountName + "']/following-sibling::*[@text='" + accountIban + "']";
-        WebElement element = x.createMobileElementByXpath(xPath);
+        MobileElement element = x.createMobileElementByXpath(xPath);
         Assert.assertTrue(element.isDisplayed());
     }
 
@@ -6937,7 +6940,7 @@ public class Steps {
         String details = DataManager.userObject.get("details").toString();
 
         String xPath = "//*[@text='" + date + "']/following-sibling::*[@text='" + purpose + "']/following-sibling::*[@text='" + details + "']/following-sibling::*[@text='" + currency + "']//following-sibling::*[@text='" + amount + "']";
-        WebElement element = x.createMobileElementByXpath(xPath);
+        MobileElement element = x.createMobileElementByXpath(xPath);
         Assert.assertTrue(element.isDisplayed());
     }
 
@@ -6979,7 +6982,7 @@ public class Steps {
         String amount = DataManager.userObject.get(key1).toString();
         String currency = DataManager.userObject.get(key2).toString();
         String expected = amount + " " + currency;
-        WebElement element = d.createMobileElementByResourceId("amount-text-value");
+        MobileElement element = d.createMobileElementByResourceId("amount-text-value");
         Assert.assertEquals(expected, element.getText());
     }
 
@@ -8715,7 +8718,7 @@ public class Steps {
             }
         }
 
-        List<WebElement> products = driver.findElements(productXpath);
+        List<MobileElement> products = driver.findElements(productXpath);
         Assert.assertTrue("Nijedan proizvod nije učitan!", products.size() > 0);
 
         Assert.assertFalse("Poslednji proizvod ('Term deposit amount') nije učitan ni posle skrolovanja!",
@@ -8724,7 +8727,7 @@ public class Steps {
 
     @Then("Assert amount and currency are displayed by Android xpath {string}")
     public void assertAmountAndCurrencyAreDisplayedByAndroidXpath(String xPath) {
-        WebElement element = driver.findElement(By.xpath(xPath));
+        MobileElement element = (MobileElement) driver.findElement(By.xpath(xPath));
         Assert.assertTrue("Amount and currency are not displayed!", element.isDisplayed());
 
         String text = element.getText();
@@ -8876,12 +8879,12 @@ public class Steps {
 //        AppiumDriver driver = Base.driver;
 
         String xPathDates = "(//android.widget.TextView[@resource-id='nlb-date'])";
-        List<WebElement> dateElements = driver.findElements(By.xpath(xPathDates));
+        List<MobileElement> dateElements = driver.findElements(By.xpath(xPathDates));
         Assert.assertFalse("No transaction date elements found by xpath: " + xPathDates, dateElements.isEmpty());
 
         List<LocalDate> dates = new ArrayList<>();
 
-        for (WebElement el : dateElements) {
+        for (MobileElement el : dateElements) {
             String raw = el.getText();
             LocalDate parsed = parseTransactionDate(raw);
             if (parsed != null) {
@@ -8927,7 +8930,7 @@ public class Steps {
     public void assertDatesAreDisplayedOnTheTransaction() {
         String xPathDates = "//android.widget.TextView[@resource-id='nlb-date']";
 
-        List<WebElement> dateElements = driver.findElements(By.xpath(xPathDates));
+        List<MobileElement> dateElements = driver.findElements(By.xpath(xPathDates));
 
         Assert.assertFalse(
                 "No transaction date elements are displayed on the screen.",
@@ -8936,7 +8939,7 @@ public class Steps {
 
         // Svaki pronađeni datum mora biti vidljiv i imati tekst
         for (int i = 0; i < dateElements.size(); i++) {
-            WebElement date = dateElements.get(i);
+            MobileElement date = dateElements.get(i);
 
             Assert.assertTrue(
                     "Transaction date at index " + i + " is not displayed.",
@@ -8960,7 +8963,7 @@ public class Steps {
     @And("Assert transaction icons for type {string} are displayed")
     public void assertTransactionIconsForTypeAreDisplayed(String type) {
         String xPathIcons = "//android.view.View[@content-desc='" + type + "']";
-        List<WebElement> icons = driver.findElements(By.xpath(xPathIcons));
+        List<MobileElement> icons = driver.findElements(By.xpath(xPathIcons));
 
         // SAFE: ako trenutno nema tog tipa transakcija na ekranu -> OK
         if (icons == null || icons.isEmpty()) {
@@ -8969,7 +8972,7 @@ public class Steps {
         }
 
         for (int i = 0; i < icons.size(); i++) {
-            WebElement icon = icons.get(i);
+            MobileElement icon = icons.get(i);
 
             Assert.assertTrue(
                     "Transaction icon for type '" + type + "' at index " + i + " is not displayed.",
@@ -8989,7 +8992,7 @@ public class Steps {
         }
     }
 
-    private String safeGetAttribute(WebElement el, String attr) {
+    private String safeGetAttribute(MobileElement el, String attr) {
         try {
             return el.getAttribute(attr);
         } catch (Exception e) {
@@ -9001,7 +9004,7 @@ public class Steps {
     public void assertDescriptionAreDisplayedOnTheTransaction() {
         String xPathDescriptions = "//android.widget.TextView[@resource-id='nlb-title']";
 
-        List<WebElement> descriptionElements = driver.findElements(By.xpath(xPathDescriptions));
+        List<MobileElement> descriptionElements = driver.findElements(By.xpath(xPathDescriptions));
 
         Assert.assertFalse(
                 "No transaction descriptions found by xpath: " + xPathDescriptions,
@@ -9009,7 +9012,7 @@ public class Steps {
         );
 
         for (int i = 0; i < descriptionElements.size(); i++) {
-            WebElement description = descriptionElements.get(i);
+            MobileElement description = descriptionElements.get(i);
 
             Assert.assertTrue(
                     "Transaction description at index " + i + " is not displayed.",
@@ -9034,7 +9037,7 @@ public class Steps {
     public void assertCounterPartyNameAreDisplayedOnTheTransaction() {
         String xPathCounterparty = "//android.widget.TextView[@resource-id='nlb-details']";
 
-        List<WebElement> counterpartyElements = driver.findElements(By.xpath(xPathCounterparty));
+        List<MobileElement> counterpartyElements = driver.findElements(By.xpath(xPathCounterparty));
 
         Assert.assertFalse(
                 "No transaction counterparty elements found by xpath: " + xPathCounterparty,
@@ -9042,7 +9045,7 @@ public class Steps {
         );
 
         for (int i = 0; i < counterpartyElements.size(); i++) {
-            WebElement counterparty = counterpartyElements.get(i);
+            MobileElement counterparty = counterpartyElements.get(i);
 
             Assert.assertTrue(
                     "Transaction counterparty at index " + i + " is not displayed.",
@@ -9760,8 +9763,8 @@ public class Steps {
     public void clickOnElementByIdOnChildren(String id, String children) {
         int number = Integer.parseInt(children);
         By element = d.createElementByResourceId(id);
-        WebElement parent = driver.findElement(element);
-        List<WebElement> childElements =
+        MobileElement parent = (MobileElement) driver.findElement(element);
+        List<MobileElement> childElements =
                 parent.findElements(By.xpath("./*"));
         childElements.get(number).click();
     }
@@ -9775,9 +9778,9 @@ public class Steps {
                 "Pregled ref.\nkamatnih stopa"
         );
 
-        WebElement tabLayout = driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/tab_layout");
+        MobileElement tabLayout = (MobileElement) driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/tab_layout");
 
-        List<WebElement> actualTabs = tabLayout.findElements(By.className("android.widget.TextView"));
+        List<MobileElement> actualTabs = tabLayout.findElements(By.className("android.widget.TextView"));
         assertEquals("Broj tabova nije odgovarajući", expectedTabs.size(), actualTabs.size());
 
         for (int i = 0; i < expectedTabs.size(); i++) {
@@ -9810,16 +9813,16 @@ public class Steps {
 
         );
 
-        WebElement recyclerView = driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/recycler_view");
-        List<WebElement> cards = recyclerView.findElements(By.xpath(".//*[contains(@resource-id,'card_view')]"));
+        MobileElement recyclerView = (MobileElement) driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/recycler_view");
+        List<MobileElement> cards = recyclerView.findElements(By.xpath(".//*[contains(@resource-id,'card_view')]"));
 
         assertEquals("Broj card view elemenata nije dobar",expectedCards.size(),cards.size());
 
-        List<WebElement> cardTitles = recyclerView.findElements(By.className("android.widget.TextView"));
+        List<MobileElement> cardTitles = recyclerView.findElements(By.className("android.widget.TextView"));
 
         List<String> actualTitles = new ArrayList<>();
 
-        for (WebElement title : cardTitles) {
+        for (MobileElement title : cardTitles) {
 
             String text = title.getText().trim();
 
@@ -9844,7 +9847,7 @@ public class Steps {
     @And("Click on offer {string}")
     public void clickOnOffer(String offerName) {
         String xpath = String.format("//android.view.ViewGroup[.//android.widget.TextView[@text='%s']]//*[contains(@resource-id,'card_view')]", offerName);
-        WebElement card = driver.findElement(By.xpath(xpath));
+        MobileElement card = (MobileElement) driver.findElement(By.xpath(xpath));
         card.click();
     }
 
@@ -9860,13 +9863,13 @@ public class Steps {
                 "Šabloni"
         );
 
-        WebElement recyclerView = driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/recyclerView");
-        List<WebElement> menuItems = recyclerView.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/layout"));
+        MobileElement recyclerView = (MobileElement) driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/recyclerView");
+        List<MobileElement> menuItems = recyclerView.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/layout"));
         assertEquals("Broj opcija nije odgovarajući", expectedOptions.size(), menuItems.size());
 
         for (int i = 0; i < menuItems.size(); i++) {
 
-            WebElement title = menuItems.get(i).findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/text"));
+            MobileElement title = menuItems.get(i).findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/text"));
             String actualText = title.getText().replaceAll("\\s+", " ").trim();
 
             String expectedText = expectedOptions.get(i).replaceAll("\\s+", " ").trim();
@@ -9882,7 +9885,7 @@ public class Steps {
     public void clickOnOption(String optionText) {
 
         String xpath = String.format("//androidx.recyclerview.widget.RecyclerView" + "//android.view.ViewGroup[.//android.widget.TextView[@text='%s']]", optionText);
-        WebElement option = driver.findElement(By.xpath(xpath));
+        MobileElement option = (MobileElement) driver.findElement(By.xpath(xpath));
         option.click();
     }
 
@@ -9985,16 +9988,106 @@ public class Steps {
 
     }
 
-    @And("Enter amount and pay")
-    public void enterAmountAndPay() {
+    @And("Enter amount {string}")
+    public void enterAmountAndClickPay(String amount) {
 
         MobileElement amountContainer = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_amount_outline_styleable_edit_text");
         MobileElement amountInput = amountContainer.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text");
         amountInput.clear();
-        amountInput.sendKeys("100");
+        amountInput.sendKeys(amount);
+        DataManager.userObject.put("amount",amount);
         //driver.hideKeyboard();
+
+    }
+    @And("Click pay")
+    public void clickPay() {
 
         MobileElement payButton = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_continue_button");
         payButton.click();
     }
+
+
+    @And("Validate internal transfer details page for user {string}")
+    public void validateInternalTransferDetailsPageForUser(String rowindex) {
+
+        List<String> expectedLabels = Arrays.asList(
+                "Platilac",
+                "Sa računa",
+                "Na račun",
+                "Iznos",
+                "Provizija",
+                "Datum izvršenja"
+        );
+
+        List<String> expectedValues = Arrays.asList(
+                DataManager.getDataFromHashDatamap(rowindex, "Licni_podaci"),
+                (String) DataManager.userObject.get("fromAccNumber"),
+                (String) DataManager.userObject.get("toAccNumber"),
+                (String) DataManager.userObject.get("amount") + " RSD",
+                "17,00 RSD",
+                Utilities.getTodayDateInFormat("dd.MM.yyyy")
+                 // prilagodi ako koristiš drugi format/datumski helper
+        );
+
+        List<MobileElement> labelElements = driver.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/confirmation_item_key"));
+
+        List<MobileElement> valueElements = driver.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/confirmation_item_value1"));
+
+        assertEquals("Broj labela nije ispravan!", expectedLabels.size(), labelElements.size());
+        assertEquals("Broj vrijednosti nije ispravan!", expectedValues.size(), valueElements.size());
+
+        for (int i = 0; i < expectedLabels.size(); i++) {
+
+            String actualLabel = normalizeText(labelElements.get(i).getText());
+            String expectedLabel = normalizeText(expectedLabels.get(i));
+
+            String actualValue = normalizeText(valueElements.get(i).getText());
+            String expectedValue = normalizeText(expectedValues.get(i));
+
+            System.out.println("------ ITEM " + i + " ------");
+            System.out.println("LABEL EXPECTED: " + expectedLabel);
+            System.out.println("LABEL ACTUAL  : " + actualLabel);
+
+            System.out.println("VALUE EXPECTED: " + expectedValue);
+            System.out.println("VALUE ACTUAL  : " + actualValue);
+
+            assertEquals("Pogrešna labela na poziciji: " + i, expectedLabel, actualLabel);
+            assertEquals("Pogrešna vrijednost na poziciji: " + i, expectedValue, actualValue);
+        }
+    }
+
+    private String normalizeText(String text) {
+        return text.replaceAll("\\s+", " ").trim();
+    }
+
+    public void verifyOptionsMenu() {
+
+        List<String> expectedOptions = Arrays.asList(
+                "Novi interni prenos",
+                "Pregled plaćanja",
+                "Početni ekran"
+        );
+
+        List<MobileElement> optionElements = driver.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/text"));
+
+        assertEquals("Broj opcija nije ispravan!", expectedOptions.size(), optionElements.size());
+
+        for (int i = 0; i < expectedOptions.size(); i++) {
+
+            MobileElement optionElement = optionElements.get(i);
+
+            String actualOption = normalizeText(optionElement.getText());
+            String expectedOption = normalizeText(expectedOptions.get(i));
+
+            System.out.println("------ OPCIJA " + i + " ------");
+            System.out.println("EXPECTED: " + expectedOption);
+            System.out.println("ACTUAL  : " + actualOption);
+
+            assertTrue("Opcija nije vidljiva: " + expectedOption, optionElement.isDisplayed());
+
+            assertEquals("Pogrešan naziv opcije na poziciji: " + i, expectedOption, actualOption);
+        }
+    }
+
+
 }
