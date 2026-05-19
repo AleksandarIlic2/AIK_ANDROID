@@ -33,6 +33,39 @@ Feature: Pocetak
     And Choose option "Ponude" from bottom menu
     And Bank logo still displayed
     And Page title is "Ponude po meri"
+    And Validate tabs in offers
+    And Wait for offers to load
+    And Validate offers
+    And Click on offer "Dozvoljeno prekoračenje"
+    #And Click on offer "Kreditna kartica"
+
+    Examples:
+      | rowindex |
+      |        1 |
+
+
+  @Internal_transfer_[MOB_ANDROID]
+  Scenario Outline: Internal_transfer_[MOB_ANDROID]
+
+    Given Open Application
+    And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
+    And Enter PIN for user "<rowindex>"
+    And Wait for login page to load
+    And Choose option "Plaćanja" from bottom menu
+    And Bank logo still displayed
+    And Page title is "Plaćanja"
+    And Validate payment page options
+    And Click on option "Interni prenos"
+    And Page title is "Interni prenos"
+    And Validate internal transfer page for user "<rowindex>"
+    And Enter amount "100,00"
+    And Click pay
+    And Validate internal transfer details page for user "<rowindex>"
+    And Click pay
+    And Assert element by text ""
+
+
+
 
     Examples:
       | rowindex |
