@@ -117,9 +117,14 @@ Feature: Product_Summary
 #note: Isto verovatno izgleda i SC obicnog placanja samo se na kraju dobije poruka uspesno placanje
 @Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
 Scenario Outline: Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
-
   Given Open Application
-  And Click on element by text "IPS"
+  And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
+  And Enter PIN for user "<rowindex>"
+  And Wait for login page to load
+  And Save text from element id: "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_int" in "stanje"
+  And Choose option "Plaćanja" from bottom menu
+  And Wait for element by text "IPS plaćanje"
+  And Click on element by text "IPS plaćanje"
   And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/galleryButton"
   And Click on element by text "Download"
   And Wait "10" seconds
@@ -127,7 +132,13 @@ Scenario Outline: Placanje_RSD_Skeniranjem_QR[MOB_ANDROID]
   And Click on element by text "Potvrdi"
   And Click on element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/pin_view"
   And Enter PIN for user "<rowindex>"
+  And Wait for element by text "Uspešno"
+  And Assert element by text "Nalog je uspešno poslat"
+  And Click on element by text "Novo plaćanje"
+  And Choose option "Početna" from bottom menu
+  And Wait for element by text "Poslednje transakcije"
 
+  And Assert text from key "stanje" in element by id "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_int" is equal to old values minus amount
 
 
   Examples:
