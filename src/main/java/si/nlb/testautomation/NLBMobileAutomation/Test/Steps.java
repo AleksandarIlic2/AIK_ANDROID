@@ -9729,10 +9729,10 @@ public class Steps {
 
     }
 
-    @And("Click on more options for the card")
-    public void clickOnMoreOptionsForTheCard() throws Throwable {
+    @And("Click on more options")
+    public void clickOnMoreOptions() throws Throwable {
 
-        MobileElement plus_button = d.createMobileElementByTagAndContainsResourceId("android.widget.ImageButton", "btn_context_menu");
+        MobileElement plus_button = d.createMobileElementByTagAndContainsResourceId("android.widget.ImageButton", "btn_context");
         hp.ClickOnElement(plus_button);
     }
 
@@ -10116,6 +10116,7 @@ public class Steps {
             assertEquals("Pogrešan naziv opcije na poziciji: " + i, expectedOption, actualOption);
         }
     }
+
 
 
 }
