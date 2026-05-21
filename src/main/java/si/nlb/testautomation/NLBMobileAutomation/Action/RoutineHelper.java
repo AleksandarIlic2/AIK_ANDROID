@@ -88,6 +88,12 @@ public class RoutineHelper {
         hp.isElementDisplayed(inputField);
         hp.enterTextToElement(value, inputField);
     }
+
+    public void enterTextToElementByContainsId(String value, String id) throws Throwable {
+        By inputField = d.createByContainsResourceId(id);
+        hp.isElementDisplayed(inputField);
+        hp.enterTextToElement(value, inputField);
+    }
     //endregion - Custom enter text to element -
 
     //region - Click -
