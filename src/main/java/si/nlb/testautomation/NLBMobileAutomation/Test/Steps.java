@@ -5,6 +5,7 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.cucumber.datatable.DataTable;
 import javafx.util.Pair;
+import org.apache.tools.ant.taskdefs.WaitFor;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9729,11 +9730,15 @@ public class Steps {
 
     }
 
-    @And("Click on more options for the card")
-    public void clickOnMoreOptionsForTheCard() throws Throwable {
-
-        MobileElement plus_button = d.createMobileElementByTagAndContainsResourceId("android.widget.ImageButton", "btn_context_menu");
-        hp.ClickOnElement(plus_button);
+    @And("Click on more options")
+    public void clickOnMoreOptions() throws Throwable {
+        System.out.println("HEEEEJ");
+        String value = "btn_context";
+        String xPath = "//*[contains(@resource-id,\"" + value + "\")]";
+        MobileElement me = x.createMobileElementByXpath(xPath);
+        MobileElement plus_button = d.createMobileElementByContainsId("btn_context");
+        //MobileElement plus_button = d.createMobileElementByTagAndContainsResourceId("android.widget.ImageButton", "btn_context");
+        hp.ClickOnElement(me);
     }
 
     @And("Click on card details")
@@ -10118,4 +10123,53 @@ public class Steps {
     }
 
 
+    @And("Enter text {string} in element contains id {string}")
+    public void enterTextInElementContainsId(String text, String id) throws Throwable {
+        //String xPath = "//*[contains(@resource-id,\"" + id + "\")]";
+        //MobileElement elementMobile = x.createMobileElementByXpath(xPath);
+        rh.enterTextToElementByContainsId(text, id);
+
+
+
+    }
+
+    @And("Wait for element contains id {string} to appear")
+    public void waitForElementContainsIdToAppear(String id) {
+        By el = d.createByContainsResourceId(id);
+        WaitHelpers.waitForElement(el);
+    }
+
+    @And("Assert element by contains id {string} has text {string}")
+    public void assertElementByContainsIdHasText(String id, String text) {
+        MobileElement el = d.createMobileElementByContainsId(id);
+        Assert.assertEquals(text, el.getText());
+    }
+
+    @And("Click on element contains id {string}")
+    public void clickOnElementContainsId(String id) throws Throwable {
+        By el = d.createByContainsResourceId(id);
+        hp.isElementDisplayed(el);
+        hp.clickElement(el);
+    }
+
+    @And("Assert element by contains id {string} has text {string} with index {string}")
+    public void assertElementByContainsIdHasTextWithIndex(String id, String text, String appearanceNumber) {
+        int number = Integer.parseInt(appearanceNumber);
+        String xPath = "//*[contains(@resource-id,\"" + id + "\")]";
+        List<MobileElement> mobileElementList = x.createMobileElementsByXpath(xPath);
+        Assert.assertEquals(mobileElementList.get(number - 1).getText(), text);
+    }
+
+    @And("Enter text in element contains id {string} from excel {string} columnName {string}")
+    public void enterTextInElementContainsIdFromExcelColumnname(String id, String rowindex, String columnName) throws Throwable {
+        String value = DataManager.getDataFromHashDatamap(rowindex, columnName);
+        rh.enterTextToElementByContainsId(value, id);
+    }
+
+    @And("Assert element by contains id {string} has text from excel {string} columnName {string}")
+    public void assertElementByContainsIdHasTextFromExcelColumnName(String id, String rowindex, String columnName) {
+        String value = DataManager.getDataFromHashDatamap(rowindex, columnName);
+        MobileElement el = d.createMobileElementByContainsId(id);
+        Assert.assertEquals(value, el.getText());
+    }
 }
