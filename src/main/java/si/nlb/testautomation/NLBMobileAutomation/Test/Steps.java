@@ -113,7 +113,8 @@ public class Steps {
 
     @When("Click on element by text {string}")
     public void clickOnElementByText(String text) throws Exception {
-        WaitHelpers.waitForSeconds(5);
+        By element = tx.createElementByText(text);
+        WaitHelpers.waitForElement(element, 60);
         rh.clickOnElementByText(text);
     }
 
@@ -9738,6 +9739,10 @@ public class Steps {
     public void clickOnMoreOptions() throws Throwable {
         System.out.println("HEEEEJ");
         String value = "btn_context";
+
+        By el = d.createElementById(value);
+        WaitHelpers.waitForElement(el);
+
         String xPath = "//*[contains(@resource-id,\"" + value + "\")]";
         MobileElement me = x.createMobileElementByXpath(xPath);
         MobileElement plus_button = d.createMobileElementByContainsId("btn_context");
@@ -10154,6 +10159,7 @@ public class Steps {
     @And("Click on element contains id {string}")
     public void clickOnElementContainsId(String id) throws Throwable {
         By el = d.createByContainsResourceId(id);
+        WaitHelpers.waitForElement(el);
         hp.isElementDisplayed(el);
         hp.clickElement(el);
     }
@@ -10199,6 +10205,52 @@ public class Steps {
             if (hp.isElementNotPresent(el)) {
                 hp.swipeByCordinates(900, 700, 400, 700);
             }
+        }
+    }
+
+    @And("Check if all tabs are displayed and tab {string} is selected")
+    public void checkIfAllTabsAreDisplayedAndTabIsSelected(String selectedTab) {
+
+        List<MobileElement> tabs = x.createElementsByXpath("//*[contains(@resource-id,'main_bottom_nav_view')]/android.view.ViewGroup/android.widget.FrameLayout");
+
+        List<String> expectedLabels = Arrays.asList(
+                "Početna",
+                "Kartice",
+                "Ponude",
+                "Plaćanja",
+                "Meni"
+        );
+
+        Assert.assertEquals("Number of tabs in bottom nav should be 5.", 5, tabs.size());
+
+        //Set<String> iconResourceIds = new HashSet<>();
+
+         for (int i = 0; i < tabs.size(); i++) {
+
+            MobileElement tab = tabs.get(i);
+            MobileElement label = tab.findElement(By.xpath(".//*[contains(@resource-id,'_label_view')]"));
+            String actualLabel = label.getText();
+
+            Assert.assertEquals("Wrong label for tab at position " + i, expectedLabels.get(i), actualLabel);
+
+            //koji tab je selektovan
+            if(actualLabel.equals(selectedTab)){
+                Assert.assertTrue(label.getAttribute("resource-id").contains("large_label_view"));
+            }
+
+
+
+            //ikonica
+            MobileElement icon = tab.findElement(By.xpath(".//*[contains(@resource-id,'navigation_bar_item_icon_view')]"));
+            String iconId = icon.getId();
+            Assert.assertNotNull("Icon should exist for tab: " + actualLabel, iconId);
+
+            //TODO Provjera da ikonice nisu iste? -nije nicim oznacena razlika u appium inspector
+            //Assert.assertFalse("Duplicate icon detected for tab: " + actualLabel, iconResourceIds.contains(iconId));
+            //iconResourceIds.add(iconId);
+
+
+
         }
     }
 }
