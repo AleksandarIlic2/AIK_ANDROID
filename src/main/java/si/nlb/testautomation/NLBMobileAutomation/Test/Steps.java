@@ -7,7 +7,10 @@ import io.cucumber.datatable.DataTable;
 import javafx.util.Pair;
 import org.apache.tools.ant.taskdefs.WaitFor;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import si.nlb.testautomation.NLBMobileAutomation.Action.HTTPAction;
@@ -41,6 +44,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -10146,6 +10150,7 @@ public class Steps {
         Assert.assertEquals(text, el.getText());
     }
 
+
     @And("Click on element contains id {string}")
     public void clickOnElementContainsId(String id) throws Throwable {
         By el = d.createByContainsResourceId(id);
@@ -10155,6 +10160,14 @@ public class Steps {
 
     @And("Assert element by contains id {string} has text {string} with index {string}")
     public void assertElementByContainsIdHasTextWithIndex(String id, String text, String appearanceNumber) {
+        int number = Integer.parseInt(appearanceNumber);
+        String xPath = "//*[contains(@resource-id,\"" + id + "\")]";
+        List<MobileElement> mobileElementList = x.createMobileElementsByXpath(xPath);
+        Assert.assertEquals(mobileElementList.get(number - 1).getText(), text);
+    }
+    @And("Assert element by contains id {string} has text from excel {string} {string} with index {string}")
+    public void assertElementByContainsIdHasTextFromExcelWithIndex(String id, String column, String rowindex, String appearanceNumber) {
+        String text = DataManager.getDataFromHashDatamap(rowindex,column);
         int number = Integer.parseInt(appearanceNumber);
         String xPath = "//*[contains(@resource-id,\"" + id + "\")]";
         List<MobileElement> mobileElementList = x.createMobileElementsByXpath(xPath);
@@ -10172,5 +10185,20 @@ public class Steps {
         String value = DataManager.getDataFromHashDatamap(rowindex, columnName);
         MobileElement el = d.createMobileElementByContainsId(id);
         Assert.assertEquals(value, el.getText());
+    }
+
+
+    @And("Swipe to card until text {string} is visible for user {string}")
+    public void swipeToCardUntilTextIsVisibleForUser(String column, String rowindex) {
+        String accNumber = DataManager.getDataFromHashDatamap(rowindex,column);
+
+        String xPath = "//*[contains(@text,'" + accNumber + "')]";
+        By el = By.xpath(xPath);
+
+        for (int i = 0; i < 35; i++) {
+            if (hp.isElementNotPresent(el)) {
+                hp.swipeByCordinates(900, 700, 400, 700);
+            }
+        }
     }
 }
