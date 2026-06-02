@@ -46,7 +46,6 @@ Scenario Outline: Accounts-Domestic_Accounts-Change_name_of_account_[MOB]
   And Wait for element by text "Transakcioni račun"
   And Assert element by contains id "accounts_list_item_name" has text "Transakcioni račun" with index "1"
 
-
   Examples:
     | rowindex |
     |        2 |
@@ -196,7 +195,6 @@ Scenario Outline: Accounts-Domestic_Accounts-Change_name_of_account_[MOB]
     And Click on element by text "Računi"
     And Wait for element by text "Transakcioni račun"
     And Assert element by contains id "accounts_list_item_name" has text from excel "nazivRacunaEUR" "<rowindex>" with index "3"
-
 
 
     Examples:

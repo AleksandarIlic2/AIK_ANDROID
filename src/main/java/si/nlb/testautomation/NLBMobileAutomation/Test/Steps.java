@@ -50,6 +50,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -9614,11 +9615,9 @@ public class Steps {
         List<MobileElement> mobileElementList = d.createElementsById(id);
         String randomString = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
 
-        if (text.equals("1"))
-        {
+        if (text.equals("1")) {
             mobileElementList.get(number - 1).sendKeys(text);
-        }
-        else {
+        } else {
             mobileElementList.get(number - 1).sendKeys(randomString);
         }
 
@@ -9846,7 +9845,7 @@ public class Steps {
     }
 
     @And("Validate offers")
-     public void validateOffers(){
+    public void validateOffers() {
 
         List<String> expectedCards = Arrays.asList(
                 "Kreditna kartica",
@@ -9859,7 +9858,7 @@ public class Steps {
         MobileElement recyclerView = (MobileElement) driver.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/recycler_view");
         List<MobileElement> cards = recyclerView.findElements(By.xpath(".//*[contains(@resource-id,'card_view')]"));
 
-        assertEquals("Broj card view elemenata nije dobar",expectedCards.size(),cards.size());
+        assertEquals("Broj card view elemenata nije dobar", expectedCards.size(), cards.size());
 
         List<MobileElement> cardTitles = recyclerView.findElements(By.className("android.widget.TextView"));
 
@@ -9887,6 +9886,7 @@ public class Steps {
         }
 
     }
+
     @And("Click on offer {string}")
     public void clickOnOffer(String offerName) {
         String xpath = String.format("//android.view.ViewGroup[.//android.widget.TextView[@text='%s']]//*[contains(@resource-id,'card_view')]", offerName);
@@ -9937,16 +9937,16 @@ public class Steps {
 
         // from account
         MobileElement fromAccLabel = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_from_account_text");
-        assertEquals("Sa računa:",fromAccLabel.getText().trim());
+        assertEquals("Sa računa:", fromAccLabel.getText().trim());
         //da li je dobar redoslijed
-        checkIfElementByResourceIdIsFollowedByElementWithResourceId("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_from_account_text","eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_debit_accounts_rv");
+        checkIfElementByResourceIdIsFollowedByElementWithResourceId("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_from_account_text", "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_debit_accounts_rv");
 
         //provjera svih elemenata iz racuna posiljaoca
         MobileElement fromAcc = x.createMobileElementByXpath("(//*[@resource-id=\"eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_debit_accounts_rv\"]//*[@resource-id=\"eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_card\"])[1]");
         MobileElement fromAccText = fromAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_name");
         MobileElement fromAccNumber = fromAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_number");
-        String accountNumber = DataManager.getDataFromHashDatamap(rowindex,"racun");
-        DataManager.userObject.put("fromAccNumber",fromAccNumber.getText().trim());
+        String accountNumber = DataManager.getDataFromHashDatamap(rowindex, "racun");
+        DataManager.userObject.put("fromAccNumber", fromAccNumber.getText().trim());
 
         assertEquals("Transakcioni račun", fromAccText.getText().trim());
         assertEquals(accountNumber, fromAccNumber.getText().trim());
@@ -9963,17 +9963,17 @@ public class Steps {
 
         // to account
         MobileElement toAccLabel = d.createMobileElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_to_account_text");
-        assertEquals("Na račun:",toAccLabel.getText().trim());
-        checkIfElementByResourceIdIsFollowedByElementWithResourceId("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_to_account_text","eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_credit_accounts_rv");
+        assertEquals("Na račun:", toAccLabel.getText().trim());
+        checkIfElementByResourceIdIsFollowedByElementWithResourceId("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_to_account_text", "eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_credit_accounts_rv");
 
         //provjera svih elemenata iz racuna primaoca
         MobileElement toAcc = x.createMobileElementByXpath("(//*[@resource-id=\"eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/landing_credit_accounts_rv\"]//*[@resource-id=\"eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_card\"])[1]");
 
         MobileElement toAccText = toAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_name");
         MobileElement toAccNumber = toAcc.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_number");
-        String accountNumberTo = DataManager.getDataFromHashDatamap(rowindex,"racun2");
+        String accountNumberTo = DataManager.getDataFromHashDatamap(rowindex, "racun2");
 
-        DataManager.userObject.put("toAccNumber",toAccNumber.getText().trim());
+        DataManager.userObject.put("toAccNumber", toAccNumber.getText().trim());
 
 
         assertEquals("Transakcioni račun", toAccText.getText().trim());
@@ -9988,7 +9988,7 @@ public class Steps {
         assertTrue(toAccBalanceInt.getText().trim().matches("(-)?\\d+(\\.\\d+)?"));
         assertTrue(toAccBalanceDecimal.getText().trim().matches(",\\d{2}"));
         assertEquals("RSD", toAccBalanceCurrency.getText().trim());
-        DataManager.userObject.put("availableBalance",toAccBalanceInt.getText().replace(".","").trim() + toAccBalanceDecimal.getText().replace(",",".").trim() + " RSD");
+        DataManager.userObject.put("availableBalance", toAccBalanceInt.getText().replace(".", "").trim() + toAccBalanceDecimal.getText().replace(",", ".").trim() + " RSD");
 
 
         //provjera polja za unos iznosa uplate
@@ -10028,7 +10028,6 @@ public class Steps {
         Assert.assertEquals(resourceId2, element.getAttribute("resource-id"));
 
 
-
     }
 
     @And("Enter amount {string}")
@@ -10038,13 +10037,14 @@ public class Steps {
         MobileElement amountInput = amountContainer.findElementById("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/outline_edit_text_app_compat_edit_text");
         amountInput.clear();
         amountInput.sendKeys(amount);
-        DataManager.userObject.put("amount",amount);
+        DataManager.userObject.put("amount", amount);
         //driver.hideKeyboard();
 
     }
+
     @And("Click pay")
     public void clickPay() {
-        MobileElement payButton = d.createMobileElementByTextAndContainsResourceId("Plati","_button"); //landing_continue_button, confirmation_confirm__button
+        MobileElement payButton = d.createMobileElementByTextAndContainsResourceId("Plati", "_button"); //landing_continue_button, confirmation_confirm__button
         payButton.click();
     }
 
@@ -10068,7 +10068,7 @@ public class Steps {
                 (String) DataManager.userObject.get("amount") + " RSD",
                 "17,00 RSD",
                 Utilities.getTodayDateInFormat("dd.MM.yyyy")
-                 // prilagodi ako koristiš drugi format/datumski helper
+                // prilagodi ako koristiš drugi format/datumski helper
         );
 
         List<MobileElement> labelElements = driver.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/confirmation_item_key"));
@@ -10132,13 +10132,11 @@ public class Steps {
     }
 
 
-
     @And("Enter text {string} in element contains id {string}")
     public void enterTextInElementContainsId(String text, String id) throws Throwable {
         //String xPath = "//*[contains(@resource-id,\"" + id + "\")]";
         //MobileElement elementMobile = x.createMobileElementByXpath(xPath);
         rh.enterTextToElementByContainsId(text, id);
-
 
 
     }
@@ -10171,9 +10169,10 @@ public class Steps {
         List<MobileElement> mobileElementList = x.createMobileElementsByXpath(xPath);
         Assert.assertEquals(mobileElementList.get(number - 1).getText(), text);
     }
+
     @And("Assert element by contains id {string} has text from excel {string} {string} with index {string}")
     public void assertElementByContainsIdHasTextFromExcelWithIndex(String id, String column, String rowindex, String appearanceNumber) {
-        String text = DataManager.getDataFromHashDatamap(rowindex,column);
+        String text = DataManager.getDataFromHashDatamap(rowindex, column);
         int number = Integer.parseInt(appearanceNumber);
         String xPath = "//*[contains(@resource-id,\"" + id + "\")]";
         List<MobileElement> mobileElementList = x.createMobileElementsByXpath(xPath);
@@ -10196,7 +10195,7 @@ public class Steps {
 
     @And("Swipe to card until text {string} is visible for user {string}")
     public void swipeToCardUntilTextIsVisibleForUser(String column, String rowindex) {
-        String accNumber = DataManager.getDataFromHashDatamap(rowindex,column);
+        String accNumber = DataManager.getDataFromHashDatamap(rowindex, column);
 
         String xPath = "//*[contains(@text,'" + accNumber + "')]";
         By el = By.xpath(xPath);
@@ -10225,7 +10224,7 @@ public class Steps {
 
         //Set<String> iconResourceIds = new HashSet<>();
 
-         for (int i = 0; i < tabs.size(); i++) {
+        for (int i = 0; i < tabs.size(); i++) {
 
             MobileElement tab = tabs.get(i);
             MobileElement label = tab.findElement(By.xpath(".//*[contains(@resource-id,'_label_view')]"));
@@ -10234,10 +10233,9 @@ public class Steps {
             Assert.assertEquals("Wrong label for tab at position " + i, expectedLabels.get(i), actualLabel);
 
             //koji tab je selektovan
-            if(actualLabel.equals(selectedTab)){
+            if (actualLabel.equals(selectedTab)) {
                 Assert.assertTrue(label.getAttribute("resource-id").contains("large_label_view"));
             }
-
 
 
             //ikonica
@@ -10250,7 +10248,171 @@ public class Steps {
             //iconResourceIds.add(iconId);
 
 
-
         }
     }
+
+
+    public static void verifyAmountFormat(String amountText) {
+
+        String regex = "^-?\\d{1,3}(\\.\\d{3})*,\\d{2}\\sRSD$";
+
+        Assert.assertTrue("Amount format is invalid: " + amountText, Pattern.matches(regex, amountText));
+    }
+
+
+    public static void verifyAccountNumberFormat(String accountNumber) {
+
+        //String regex = "^105-\\d{12}-\\d{2}$";
+        String regex = "^\\d{3}-\\d{13}-\\d{2}$";
+        Assert.assertTrue("Account number format is invalid: " + accountNumber, Pattern.matches(regex, accountNumber));
+    }
+
+    public static void verifyAccountNumberDashes(String accountNumber) {
+
+        Assert.assertEquals("First dash is not on correct position", accountNumber.charAt(3), '-');
+        Assert.assertEquals("Second dash is not on correct position", accountNumber.charAt(16), '-');
+    }
+
+    public static void verifyAccountNumberLength(String accountNumber) {
+
+        Assert.assertEquals("Account number length is invalid", accountNumber.length(), 19);
+    }
+
+    @And("Check if account data {string} is correct for user {string}")
+    public void checkIfAccountDataIsCorrectForUser(String accCurr, String rowindex) throws Throwable {
+
+        String columnName1 = "nazivRacuna" + accCurr;
+        String columnName2 = "brojRacuna" + accCurr;
+
+        String expectedAccName = DataManager.getDataFromHashDatamap(rowindex, columnName1);
+        String expectedAccNumber = DataManager.getDataFromHashDatamap(rowindex, columnName2);
+
+        //current active swipe container
+        MobileElement currentCard = d.createMobileElementByContainsId("account_card");
+
+        MobileElement actualAccName = currentCard.findElement(By.xpath(".//*[contains(@resource-id,'account_name')]"));
+        MobileElement actualAccNumber = currentCard.findElement(By.xpath(".//*[contains(@resource-id,'account_number')]"));
+
+        verifyAccountNumberFormat(actualAccNumber.getText().trim());
+
+        Assert.assertEquals(expectedAccName, actualAccName.getText().trim());
+        Assert.assertEquals(expectedAccNumber, actualAccNumber.getText().trim());
+
+        DataManager.userObject.put("accountName", actualAccName.getText());
+        DataManager.userObject.put("accountNumber", actualAccNumber.getText());
+
+//balance, available and reserved balance
+        MobileElement balanceLabel = currentCard.findElement(By.xpath(".//*[contains(@resource-id,'balance_label')]"));
+        Assert.assertEquals("Stanje:", balanceLabel.getText().trim());
+
+        MobileElement balanceEl = currentCard.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/balance"));
+        verifyAmountFormat(balanceEl.getText().trim());
+
+        String balance = (balanceEl.getText().trim().split(" "))[0];
+        String currency = (balanceEl.getText().trim().split(" "))[1];
+
+        Assert.assertEquals(accCurr, currency.trim());
+        Assert.assertTrue(balance.matches("(-)?\\d{1,3}(\\.\\d{3})*,\\d{2}"));
+
+//double _balance=Double.parseDouble(balance.replace(".","").replace(",","."));
+
+        DataManager.userObject.put("balance", balanceEl.getText());
+        DataManager.userObject.put("currency", currency.trim());
+
+        MobileElement reservedBalanceLabel = currentCard.findElement(By.xpath(".//*[contains(@resource-id,'reserved_label')]"));
+        Assert.assertEquals("Rezervisano:", reservedBalanceLabel.getText().trim());
+
+        MobileElement rsvBalEl = currentCard.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/reserved"));
+        verifyAmountFormat(rsvBalEl.getText().trim());
+
+        String rsvBal = (rsvBalEl.getText().trim().split(" "))[0];
+        String currency3 = (rsvBalEl.getText().trim().split(" "))[1];
+
+        Assert.assertEquals(accCurr, currency3.trim());
+        Assert.assertTrue(rsvBal.matches("(-)?\\d{1,3}(\\.\\d{3})*,\\d{2}"));
+//double _rsvBal=Double.parseDouble(rsvBal.replace(".","").replace(",","."));
+        DataManager.userObject.put("reservedBalance", rsvBalEl.getText());
+
+        MobileElement availableBalanceLabel = currentCard.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_label"));
+        Assert.assertEquals("Raspoloživo stanje:", availableBalanceLabel.getText().trim());
+
+        MobileElement availableBalanceInt = currentCard.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_int"));
+        MobileElement availableBalanceDecimal = currentCard.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_decimal"));
+        MobileElement availableBalanceCurrency = currentCard.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/available_balance_currency"));
+
+        String intPart = availableBalanceInt.getText().trim();
+        String decimalPart = availableBalanceDecimal.getText().trim();
+        String currency4 = availableBalanceCurrency.getText().trim();
+
+        String fullAmount = intPart + decimalPart;
+
+        Assert.assertEquals(currency4, accCurr);
+        Assert.assertTrue("Available balance format is invalid: " + fullAmount, fullAmount.matches("(-)?\\d{1,3}(\\.\\d{3})*,\\d{2}"));
+        Assert.assertTrue("Decimal part format is invalid: " + decimalPart, decimalPart.matches(",\\d{2}"));
+        Assert.assertTrue("Integer part format is invalid: " + intPart, intPart.matches("(-)?\\d{1,3}(\\.\\d{3})*"));
+
+        DataManager.userObject.put("availableBalance", fullAmount);
+    }
+
+    @And("Verify options for account")
+    public void verifyOptionsForAccount() {
+
+        List<String> expectedOptions = Arrays.asList(
+                "Novo plaćanje",
+                "Interni prenos",
+                "Menjačnica",
+                "Prenesi",
+                "Izmeni naziv računa",
+                "Pregled izvoda",
+                "Detalji računa"
+        );
+
+        List<MobileElement> menuItems = driver.findElements(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup"));
+        Assert.assertEquals(menuItems.size(), expectedOptions.size());
+
+        for (int i = 0; i < expectedOptions.size(); i++) {
+
+            MobileElement item = menuItems.get(i);
+            String actualText = item.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/name")).getText();
+            Assert.assertEquals(actualText, expectedOptions.get(i));
+
+            List<MobileElement> icons = item.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/icon"));
+            Assert.assertFalse(icons.isEmpty());
+
+            List<MobileElement> arrows = item.findElements(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/arrow"));
+            Assert.assertFalse(arrows.isEmpty());
+        }
+    }
+
+    @And("Verify last transactions default section")
+    public void verifyLastTransactionsDefaultSection() {
+
+        // naslov
+        MobileElement title = (MobileElement) driver.findElement(By.xpath("//android.widget.TextView[contains(@text,'Poslednje transakcije')]"));
+        Assert.assertTrue(title.isDisplayed());
+
+        MobileElement rb3 = (MobileElement) driver.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/rb_3"));
+        MobileElement rb5 = (MobileElement) driver.findElement(By.id("eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/rb_5"));
+
+        Assert.assertTrue(rb3.isDisplayed());
+        Assert.assertTrue(rb5.isDisplayed());
+
+        // po defaultu treba da bude selektovano 3
+        Assert.assertTrue(rb3.getAttribute("checked").equalsIgnoreCase("true") || rb3.getAttribute("selected").equalsIgnoreCase("true"));
+
+        // prikazane su 3 transakcije
+        List<MobileElement> transactions = driver.findElements(By.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id='eu.newfrontier.iBanking.mobile.AIK.Retail.uat:id/account_turnover']" + "/android.view.ViewGroup"));
+
+        Assert.assertEquals(transactions.size(), 3);
+
+    }
+
+    @And("Open full transaction history")
+    public void openFullTransactionHistory() {
+
+        driver.findElement(By.xpath("//android.widget.TextView[contains(@text,'Vidi ceo promet')]")).click();
+
+        //TODO 30 trasnsakcija?
+    }
 }
+
